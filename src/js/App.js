@@ -1,12 +1,23 @@
 import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 
-export default function App() {
-    return (
-        <div>
-            <h1>I am an App component</h1>
-            <button onClick={() => {
-                electron.notificationApi.sendNotification('My custom notification')
-            }}>Notify</button>
-        </div>
-    )
-}
+import Home from './pages/home.js';
+import Options from './pages/options.js';
+
+import './App.scss';
+
+const App = () => {
+ return (
+    <>
+       <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/options" element={<Options />} />
+       </Routes>
+
+
+       
+    </>
+ );
+};
+
+export default App;
