@@ -1,0 +1,9 @@
+## Mac OS
+.DS_Store
+
+## Node modules
+node_modules
+dist/
+
+## Test folder
+src/test/
