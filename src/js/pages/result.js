@@ -1,12 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-import Menu from '../components/Menu';
-
 
 const Result = () => {
 
@@ -64,7 +61,9 @@ return (
             <button id="result-form-copy-button" type="submit">Kopiëer</button> 
         </form> 
 
-        <Menu />
+        <div className="start-again-button-container">
+            <Link to="/">Begin opnieuw</Link>
+        </div>
 
         <ToastContainer />
 

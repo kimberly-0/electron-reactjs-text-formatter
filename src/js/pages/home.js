@@ -2,8 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
-import Menu from '../components/Menu';
-
 const Home = () => {
 
     // Text form data
