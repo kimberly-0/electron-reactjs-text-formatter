@@ -2,6 +2,8 @@ import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
+import Header from '../components/Header';
+
 const Home = () => {
 
     // Text form data
@@ -33,11 +35,12 @@ const Home = () => {
 
 return (
     <div className="home-page">
-        <h1>Home page</h1>
+        <Header />
 
         <form id="text-form" onSubmit={handleSubmit}>
-            <label>Tekst:</label>
+            <label className="text-form__label">Onopgemaakte uitslag:</label>
             <textarea 
+                className="text-form__textfield"
                 name="text" 
                 value={text} 
                 onChange ={(e) => setText(e.target.value)}
@@ -45,7 +48,7 @@ return (
                 required 
             />
 
-            <button id="text-form-submit-button" type="submit">Volgende</button> 
+            <button className="text-form__button" type="submit">Volgende</button> 
         </form> 
 
     </div>

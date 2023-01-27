@@ -1,11 +1,14 @@
 import React from 'react';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import Header from '../components/Header';
+
 const Result = () => {
+
+    const navigate = useNavigate();
 
     // Data that was sent from Options page
     const location = useLocation();
@@ -38,19 +41,20 @@ const Result = () => {
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
-        draggable: true,
+        draggable: false,
         progress: undefined,
         theme: "light",
     });
 
 return (
     <div className="result-page">
-        <h1>Result page</h1>
+        <Header />
 
         <form id="result-form" onSubmit={copyValue}>
 
-            <label>Resultaat:</label>
+            <label className="result-form__label">Resultaat:</label>
             <textarea 
+                className="result-form__textfield"
                 name="result" 
                 value={result} 
                 onChange ={(e) => setResult(e.target.value)}
@@ -58,12 +62,9 @@ return (
                 required 
             />
 
-            <button id="result-form-copy-button" type="submit">Kopiëer</button> 
+            <button className="result-form__button" type="submit">Kopiëer</button> 
+            <button className="start-again__button" onClick={() => {navigate("../")}}>Begin opnieuw</button> 
         </form> 
-
-        <div className="start-again-button-container">
-            <Link to="/">Begin opnieuw</Link>
-        </div>
 
         <ToastContainer />
 

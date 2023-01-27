@@ -2,6 +2,8 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 
+import Header from '../components/Header';
+
 const Options = () => {
 
     // Data that was sent from Home page
@@ -34,8 +36,9 @@ const Options = () => {
 
             arr.push(
                 <div className="column-option-container" key={i}>
-                    <label>{columns[i]}</label>
+                    <label className="options-form__label">{columns[i]}</label>
                     <select
+                        className="options-form__selectbox"
                         id={"column-" + i}
                         value = {columnOptions[i]}
                         onChange={(e) => handleChange(e, i)}
@@ -87,15 +90,17 @@ const Options = () => {
 
 return (
     <div className="options-page">
-        <h1>Options page</h1>
+        <Header />
 
-        <h5>Columns: { columns }</h5>
+        {/* <h5>Voorbeeld: { columns.join(' ') }</h5> */}
+
+        <h5>Selecteer opties</h5>
 
         <form id="options-form" onSubmit={handleSubmit}>
 
             { buildColumnOptions() } {/* Select field for each column */}
 
-            <button id="options-form-submit-button" type="submit">Formateer</button> 
+            <button className="options-form__button" type="submit">Formateer</button> 
         </form> 
 
     </div>

@@ -1,13 +1,76 @@
 body {
     background-color: #EAEAEA;
     padding: 2em;
+    font-family: sans-serif;
+    line-height: 1.5;
 }
 
-h1 {
-    color: navy;
+label {
+    display: block;
+    font-size: 18px;
 }
 
-.spacer {
-    min-height: 5em;
+textarea {
+    display: block;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding: 15px;
+    width: 700px;
+    max-width: 1000px;
+    height: 400px;
+    border-style: none;
+    border-radius: 4px;
+    box-shadow: 0 1px 10px 0 rgb(0 0 0 / 10%), 0 2px 15px 0 rgb(0 0 0 / 5%);
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
 }
 
+.column-option-container label {
+    margin-bottom: 15px;
+}
+
+.column-option-container label {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+select {
+    display: inline-block;
+    padding: 4px;
+    border-style: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+button {
+    display: block;
+    padding: 10px 20px 10px 20px;
+    border-style: none;
+    border-radius: 4px;
+    box-shadow: 0 1px 10px 0 rgb(0 0 0 / 10%), 0 2px 15px 0 rgb(0 0 0 / 5%);
+    box-sizing: border-box;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #cccccc;
+    transition: background 0.2s;
+}
+
+#result-form button {
+    display: inline-block;
+}
+
+#result-form button:first-of-type {
+    background-color: #07bc0c;
+    margin-right: 10px;
+}
+
+#result-form button:first-of-type:hover {
+    background-color: #029106;
+}
