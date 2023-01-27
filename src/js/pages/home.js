@@ -6,15 +6,31 @@ import Menu from '../components/Menu';
 
 const Home = () => {
 
+    // Text form data
     const [text, setText] = useState('');
+
+    /*
+    Handle form submit
+    */
     const navigate = useNavigate();
     const ipcRenderer = (window).ipcRenderer;
-
     const handleSubmit = (e) => {
+        // Prevent page from refreshing
         e.preventDefault();
-        console.log(text); // to delete later
+
+        // Send text to main process
         ipcRenderer.send('submit:text', text)
-        // navigate("../options");
+
+        // Get first line columns from main process 
+        // + navigate to Options page
+        ipcRenderer.on('columns:detected', (columns) => {
+            navigate("../options", {
+                state: {
+                    text: text,
+                    columns: columns
+                }
+            })
+        })
     }
 
 return (
@@ -32,8 +48,6 @@ return (
 
             <button id="text-form-submit-button" type="submit">Volgende</button> 
         </form> 
-
-        <Menu />
 
     </div>
 )}

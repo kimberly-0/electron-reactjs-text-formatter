@@ -15,11 +15,53 @@ if (isDev) {
 }
 
 /*
----- CREATE WINDOWS ----
+---- FUNCTIONALITY ----
 */
 
+// Get text form input from Home page
+ipcMain.on('submit:text', (e, text) => {
+    detectColumns(text);  
+});
+
+// Detect existing columns of first line
+function detectColumns(text) {
+
+    const lines = text.split(/\r?\n/); // split text into lines
+    const firstLine = lines[0].trim(); // remove excess space at beginning and end
+    const columns = firstLine.split(/\s{2,}/); // split line into columns (where there's two or more spaces)
+
+    console.log(columns);
+
+    // Send columns to renderer
+    mainWindow.webContents.send('columns:detected', columns);
+
+    // send columns to front-end -> in a form: for each column, create select input
+}
+
+// Get options form input from Options page
+ipcMain.on('submit:options', (e, args) => {
+    formatText(args.text, args.columnOptions);
+});
+
+// Format text based on options selected
+function formatText(text, columnOptions) {
+    console.log("IN FORMAT TEXT FUNC");
+    console.log(text);
+    console.log(columnOptions); 
+
+    const formattedText = text;
+
+    // Send formattedText to renderer
+    mainWindow.webContents.send('text:formatted', formattedText);
+}
+
+
+/*
+---- CREATE WINDOWS ----
+*/
+let mainWindow;
 function createMainWindow() {
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         title: "Electron app with ReactJS",
         width: isDev ? 1300 : 1000,
         height: 800,
@@ -37,15 +79,6 @@ function createMainWindow() {
 
     mainWindow.loadFile(path.join(__dirname, 'index.html'));
 }
-
-/*
----- FUNCTIONALITY ----
-*/
-
-// Get form input text
-ipcMain.on('submit:text', (e, text) => {
-    console.log(text);    
-});
 
 /*
 ---- START AND STOP RUNNING APP ----
