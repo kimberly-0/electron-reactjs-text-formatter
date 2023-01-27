@@ -8,11 +8,13 @@ const Home = () => {
 
     const [text, setText] = useState('');
     const navigate = useNavigate();
+    const ipcRenderer = (window).ipcRenderer;
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(text); // to delete later
-        navigate("../options");
+        ipcRenderer.send('submit:text', text)
+        // navigate("../options");
     }
 
 return (

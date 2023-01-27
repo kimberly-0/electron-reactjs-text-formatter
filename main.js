@@ -46,6 +46,10 @@ ipcMain.on('notify', (_, message) => {
     new Notification({title: 'Notification', body: message}).show();
 })
 
+ipcMain.on('submit:text', (e, text) => {
+    console.log(text);    
+});
+
 /*
 ---- START AND STOP RUNNING APP ----
 */
