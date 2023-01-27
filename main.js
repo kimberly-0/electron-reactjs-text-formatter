@@ -42,10 +42,7 @@ function createMainWindow() {
 ---- FUNCTIONALITY ----
 */
 
-ipcMain.on('notify', (_, message) => {
-    new Notification({title: 'Notification', body: message}).show();
-})
-
+// Get form input text
 ipcMain.on('submit:text', (e, text) => {
     console.log(text);    
 });
