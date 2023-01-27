@@ -41,12 +41,11 @@ const Options = () => {
                         onChange={(e) => handleChange(e, i)}
                         // required
                     >
-                        <option disabled value={""}> -- selecteer een optie -- </option>
+                        <option value={""}> -- verwijder -- </option>
                         <option value={"plaats"}>plaats</option>
                         <option value={"naam"}>naam</option>
                         <option value={"gemeente"}>gemeente</option>
                         <option value={"snelheid"}>snelheid</option>
-                        <option value={"verwijder"}>VERWIJDER</option>
                     </select>
                 </div>
             );

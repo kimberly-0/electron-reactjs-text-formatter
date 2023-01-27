@@ -18,6 +18,16 @@ if (isDev) {
 ---- FUNCTIONALITY ----
 */
 
+// Split text into lines (where there's an enter)
+function splitTextIntoLines(text) {
+    return text.split(/\r?\n/);
+}
+
+// Split line into columns (where there's two or more spaces)
+function splitLineIntoColumns(line) {
+    return line.trim().split(/\s{2,}/);
+}
+
 // Get text form input from Home page
 ipcMain.on('submit:text', (e, text) => {
     detectColumns(text);  
@@ -26,16 +36,11 @@ ipcMain.on('submit:text', (e, text) => {
 // Detect existing columns of first line
 function detectColumns(text) {
 
-    const lines = text.split(/\r?\n/); // split text into lines
-    const firstLine = lines[0].trim(); // remove excess space at beginning and end
-    const columns = firstLine.split(/\s{2,}/); // split line into columns (where there's two or more spaces)
+    const lines = splitTextIntoLines(text);
+    const columns = splitLineIntoColumns(lines[0]);
 
-    console.log(columns);
-
-    // Send columns to renderer
+    // Send columns to renderer -> to select an option for each column
     mainWindow.webContents.send('columns:detected', columns);
-
-    // send columns to front-end -> in a form: for each column, create select input
 }
 
 // Get options form input from Options page
@@ -45,16 +50,67 @@ ipcMain.on('submit:options', (e, args) => {
 
 // Format text based on options selected
 function formatText(text, columnOptions) {
-    console.log("IN FORMAT TEXT FUNC");
-    console.log(text);
-    console.log(columnOptions); 
+    const formattedText = [];
+    const lines = splitTextIntoLines(text);
+    
+    // Iterate through the lines in the text
+    for (let l = 0; l < lines.length; l++) {
+        let formattedLine = [];
+        const columns = splitLineIntoColumns(lines[l]);
 
-    const formattedText = text;
+        // If there's only 1 column and option to delete is selected, leave for loop immediately
+        if (columns.length == 1 && columnOptions[0] == "") {
+            break;
+        }
+
+        // Iterate through columns of the line
+        for (let c = 0; c < columns.length; c++) {
+            switch (columnOptions[c]) {
+                case 'plaats':
+                    formattedLine.push(columns[c] + ".");
+                    break;
+                case 'naam':
+                    formattedLine.push(columns[c] + ",");
+                    break;
+                case 'gemeente':
+                    formattedLine.push(columns[c] + ",");
+                    break;
+                case 'snelheid':
+                    // Haal nummers achter te komma of punt weg
+                    const beforeComma = columns[c].split(/[,.]/);
+                    formattedLine.push(beforeComma[0] + " m");
+                    break;
+                default:
+                    columns[c] = "";
+                    break;
+            }
+        }
+
+        // Merge columns into one line
+        let formattedLineMerged = formattedLine.join(' ').trim();
+
+        // If this is the last line, end with '.', otherwise end line with ';'
+        if (l == lines.length - 1) {
+            formattedLineMerged = formattedLineMerged + ".";
+        } else {
+            formattedLineMerged = formattedLineMerged + "; ";
+        }
+
+        // Add line to formatted text
+        formattedText.push(formattedLineMerged);
+        
+    }
 
     // Send formattedText to renderer
     mainWindow.webContents.send('text:formatted', formattedText);
 }
 
+// Get result form input from Result page
+ipcMain.on('copy:result', (e, result) => {
+    // Write the value of the text field to system clipboard
+    const { clipboard } = require('electron');
+    clipboard.writeText(result);
+});
 
 /*
 ---- CREATE WINDOWS ----

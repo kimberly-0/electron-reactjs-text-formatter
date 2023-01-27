@@ -11,11 +11,36 @@ const Result = () => {
     const location = useLocation();
     let formattedText = location.state.formattedText;
 
+    // Result form data
+    const [result, setResult] = useState(formattedText);
+
+    /*
+    Handle form submit (copy to clipboard)
+    */
+    const copyValue = (e) => {
+        // Prevent page from refreshing
+        e.preventDefault();
+
+        // Send value of text field to main process
+        ipcRenderer.send('copy:result', result)
+    }
+
 return (
-    <div className="options-page">
+    <div className="result-page">
         <h1>Result page</h1>
 
-        <h5>Formatted text: { formattedText }</h5>
+        <form id="result-form" onSubmit={copyValue}>
+
+            <label>Resultaat:</label>
+            <textarea 
+                name="result" 
+                value={result} 
+                onChange ={(e) => setResult(e.target.value)}
+                required 
+            />
+
+            <button id="result-form-copy-button" type="submit">Kopiëer</button> 
+        </form> 
 
         <Menu />
 
