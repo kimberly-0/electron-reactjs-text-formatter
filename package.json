@@ -1,8 +1,8 @@
 {
-  "name": "electron-with-reactjs",
-  "productName": "Electron app with ReactJs",
+  "name": "text-formatter",
+  "productName": "Tekst opmaken",
   "version": "1.0.0",
-  "description": "Electron with ReactJS tutorial",
+  "description": "Programma om tekst op te maken",
   "main": "main.js",
   "scripts": {
     "watch": "webpack --config webpack.common.js --watch",
