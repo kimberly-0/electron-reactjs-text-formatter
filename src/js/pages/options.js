@@ -59,7 +59,6 @@ const Options = () => {
     function handleChange(e, i) {
         let data = [...columnOptions];
         data[i] = e.target.value;
-        console.log('data: ' + data);
         setColumnOptions(data);
     }
 
@@ -71,9 +70,6 @@ const Options = () => {
     const handleSubmit = (e) => {
         // Prevent page from refreshing
         e.preventDefault();
-
-        // console.log("text: " + text); // TO DELETE LATER
-        console.log("column options: " + columnOptions); // TO DELETE LATER
 
         // Send text to main process
         ipcRenderer.send('submit:options', {text, columnOptions})

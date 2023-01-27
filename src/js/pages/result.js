@@ -2,6 +2,9 @@ import React from 'react';
 import { useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Menu from '../components/Menu';
 
 
@@ -29,10 +32,23 @@ const Result = () => {
 
         // Catch the copy:done event
         ipcRenderer.on('copy:done', () => {
-            // alertSucces('Gekopiëerd');
+            alertSuccess("Gekopiëerd");
             console.log('Gekopiëerd');
         })
     }
+
+    // Show success alert
+    const alertSuccess = (message) => toast.success(message, {
+        toastId: 'success1',
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+    });
 
 return (
     <div className="result-page">
@@ -45,6 +61,7 @@ return (
                 name="result" 
                 value={result} 
                 onChange ={(e) => setResult(e.target.value)}
+                spellCheck="false"
                 required 
             />
 
@@ -52,6 +69,8 @@ return (
         </form> 
 
         <Menu />
+
+        <ToastContainer />
 
     </div>
 )}

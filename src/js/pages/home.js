@@ -43,6 +43,7 @@ return (
                 name="text" 
                 value={text} 
                 onChange ={(e) => setText(e.target.value)}
+                spellCheck="false"
                 required 
             />
 
