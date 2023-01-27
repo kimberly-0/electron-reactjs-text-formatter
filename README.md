@@ -1,5 +1,10 @@
+Made with Electron and React
+---
+---
+
 Get started
 ---
+*need to have node installed*
 
 1. Clone project
 2. Install dependencies with `npm install`
