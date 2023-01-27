@@ -1,21 +1,39 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
-export default function Home() {
+import Menu from '../components/Menu';
+
+const Home = () => {
+
+    const [text, setText] = useState('');
+    const navigate = useNavigate();
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(text); // to delete later
+        navigate("../options");
+    }
+
 return (
     <div className="home-page">
         <h1>Home page</h1>
 
-        <button onClick={()=> {
-            electron.notificationApi.sendNotification('My custom notification')
-            }}>Notify</button>
+        <form id="text-form" onSubmit={handleSubmit}>
+            <label>Tekst:</label>
+            <textarea 
+                name="text" 
+                value={text} 
+                onChange ={(e) => setText(e.target.value)}
+                required 
+            />
 
-        <div className="menu">
-            <ul>
-                <li><Link to="/options">Options</Link></li>
-                <li><Link to="/result">Result</Link></li>
-            </ul>
-        </div>
+            <button id="text-form-submit-button" type="submit">Volgende</button> 
+        </form> 
+
+        <Menu />
 
     </div>
 )}
+
+export default Home;

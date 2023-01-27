@@ -1,9 +1,9 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-import Home from './pages/home.js';
-import Options from './pages/options.js';
-import Result from './pages/result.js';
+import Home from './pages/Home';
+import Options from './pages/Options';
+import Result from './pages/Result';
 
 import './App.scss';
 
@@ -16,8 +16,6 @@ const App = () => {
           <Route path="/result" element={<Result />} />
        </Routes>
 
-
-       
     </>
  );
 };
