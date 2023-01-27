@@ -98,11 +98,11 @@ function formatText(text, columnOptions) {
 
         // Add line to formatted text
         formattedText.push(formattedLineMerged);
-        
     }
 
     // Send formattedText to renderer
-    mainWindow.webContents.send('text:formatted', formattedText);
+    let formattedTextMerged = formattedText.join('');
+    mainWindow.webContents.send('text:formatted', formattedTextMerged);
 }
 
 // Get result form input from Result page
@@ -110,6 +110,9 @@ ipcMain.on('copy:result', (e, result) => {
     // Write the value of the text field to system clipboard
     const { clipboard } = require('electron');
     clipboard.writeText(result);
+
+    // Send confirmation to renderer
+    mainWindow.webContents.send('copy:done');
 });
 
 /*

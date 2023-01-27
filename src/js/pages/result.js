@@ -21,8 +21,17 @@ const Result = () => {
         // Prevent page from refreshing
         e.preventDefault();
 
+        console.log(typeof result);
+        console.log(result);
+
         // Send value of text field to main process
         ipcRenderer.send('copy:result', result)
+
+        // Catch the copy:done event
+        ipcRenderer.on('copy:done', () => {
+            // alertSucces('Gekopiëerd');
+            console.log('Gekopiëerd');
+        })
     }
 
 return (
