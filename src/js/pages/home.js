@@ -8,6 +8,7 @@ const Home = () => {
 
     // Text form data
     const [text, setText] = useState('');
+    const [source, setSource] = useState('');
 
     /*
     Handle form submit
@@ -19,7 +20,7 @@ const Home = () => {
         e.preventDefault();
 
         // Send text to main process
-        ipcRenderer.send('submit:text', text)
+        ipcRenderer.send('submit:text', {text, source})
 
         // Get first line columns from main process 
         // + navigate to Options page
@@ -27,6 +28,7 @@ const Home = () => {
             navigate("../options", {
                 state: {
                     text: text,
+                    source: source,
                     columns: columns
                 }
             })
@@ -47,6 +49,21 @@ return (
                 spellCheck="false"
                 required 
             />
+
+            <div className="select-field-container">
+                <label className="text-form__label">Bron van uitslag:</label>
+                <select
+                    className="text-form__selectbox"
+                    id="source"
+                    value ={source}
+                    onChange={(e) => setSource(e.target.value)}
+                    required
+                >
+                    <option disabled value={""}> -- selecteer -- </option>
+                    <option value={"kbdb"}>KBDB</option>
+                    <option value={"compuclub"}>Compuclub</option>
+                </select>
+            </div>
 
             <button className="text-form__button" type="submit">Volgende</button> 
         </form> 

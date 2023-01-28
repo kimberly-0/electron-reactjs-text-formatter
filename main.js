@@ -3,7 +3,7 @@ const { app, BrowserWindow, ipcMain, Notification } = require('electron');
 
 const isMac = process.platform === 'darwin'; // Check if platform is a Mac (darwin: mac, win32: windows, linux: linux)
 
-process.env.NODE_ENV = 'production';
+// process.env.NODE_ENV = 'production';
 const isDev = process.env.NODE_ENV !== 'production'; // Check if we're in DEV mode
 
 // Auto reload window on change if in DEV mode
@@ -15,7 +15,7 @@ if (isDev) {
 }
 
 /*
----- FUNCTIONALITY ----
+---- FUNCTIONALITY - helper functions ----
 */
 
 // Split text into lines (where there's an enter)
@@ -24,20 +24,42 @@ function splitTextIntoLines(text) {
 }
 
 // Split line into columns (where there's two or more spaces)
-function splitLineIntoColumns(line) {
-    return line.trim().split(/\s{2,}/);
+function splitLineIntoColumns(line, source) {
+    if (source == "compuclub") {
+        return line.trim().split(/\s{2,}/);
+    } else {
+        return line.trim().split(/[\t]/gm);
+    }
 }
 
+// Capitalize first letter of each word in a line
+function capitalizeFirstLetterOfEachWord(line, splitChar) {
+    const arr = line.split(splitChar);
+    for (var i = 0; i < arr.length; i++) {
+        string = arr[i];
+        if (string !== "m" && string !== "et" && string !== "en") {
+            arr[i] = string[0].toUpperCase() + string.slice(1);
+        }
+    }
+    return arr.join(splitChar);
+}
+
+/*
+---- FUNCTIONALITY ----
+*/
+
+let source = ""; // TO DELETE LATER and pass through funcs  --------------------
 // Get text form input from Home page
-ipcMain.on('submit:text', (e, text) => {
-    detectColumns(text);  
+ipcMain.on('submit:text', (e, args) => {
+    source = args.source;
+    detectColumns(args.text, args.source);  
 });
 
 // Detect existing columns of first line
-function detectColumns(text) {
+function detectColumns(text, source) {
 
     const lines = splitTextIntoLines(text);
-    const columns = splitLineIntoColumns(lines[0]);
+    const columns = splitLineIntoColumns(lines[0], source);
 
     // Send columns to renderer -> to select an option for each column
     mainWindow.webContents.send('columns:detected', columns);
@@ -88,6 +110,14 @@ function formatText(text, columnOptions) {
 
         // Merge columns into one line
         let formattedLineMerged = formattedLine.join(' ').trim();
+
+        // If source is KBDB, change from caps to small letters with first letter cap
+        if (source == "kbdb") {
+            formattedLineMerged = formattedLineMerged.toLowerCase();
+            formattedLineMerged = capitalizeFirstLetterOfEachWord(formattedLineMerged, " ");
+            formattedLineMerged = capitalizeFirstLetterOfEachWord(formattedLineMerged, "-");
+            formattedLineMerged = capitalizeFirstLetterOfEachWord(formattedLineMerged, "(");
+        }
 
         // If this is the last line, end with '.', otherwise end line with ';'
         if (l == lines.length - 1) {

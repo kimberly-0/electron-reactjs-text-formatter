@@ -35,7 +35,7 @@ const Options = () => {
         for (let i = 0; i < columns.length; i++) {
 
             arr.push(
-                <div className="column-option-container" key={i}>
+                <div className="select-field-container" key={i}>
                     <label className="options-form__label">{columns[i]}</label>
                     <select
                         className="options-form__selectbox"
