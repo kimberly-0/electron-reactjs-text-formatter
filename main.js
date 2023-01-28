@@ -25,7 +25,7 @@ function splitTextIntoLines(text) {
 
 // Split line into columns (where there's two or more spaces)
 function splitLineIntoColumns(line, source) {
-    if (source == "compuclub") {
+    if (source === "compuclub") {
         return line.trim().split(/\s{2,}/);
     } else {
         return line.trim().split(/[\t]/gm);
@@ -73,9 +73,12 @@ function formatText(text, source, columnOptions, optionsGemeente, optionsSnelhei
 
     // Iterate through the lines in the text and format each line
     const lines = splitTextIntoLines(text);
+
+    console.log(lines);
+
     for (let l = 0; l < lines.length; l++) {
 
-        const columns = splitLineIntoColumns(lines[l]);
+        const columns = splitLineIntoColumns(lines[l], source);
 
         // Remove unnecessary columns from Line and columnOptions
         const newColumnOptions = [];
