@@ -100,7 +100,7 @@ return (
 
             { buildColumnOptions() } {/* Select field for each column */}
 
-            <button className="options-form__button" type="submit">Formateer</button> 
+            <button className="options-form__button" type="submit">Verwerk</button> 
         </form> 
 
     </div>
