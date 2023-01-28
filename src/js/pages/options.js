@@ -18,6 +18,11 @@ const Options = () => {
     const [fullTextOptionsSnelheid, setFullTextOptionsSnelheid] = useState("overal");
     const [fullTextOptionsSnelheidDigits, setFullTextOptionsSnelheidDigits] = useState(0);
 
+    // Show additional full text options
+    const [showAdditionalOptions, setShowAdditionalOptions] = useState(false);
+    const [gemeenteSelected, setGemeenteSelected] = useState(false);
+    const [snelheidSelected, setSnelheidSelected] = useState(false);
+
     /*
     Set initial select values 
     (with useEffect to update state only one time when the component mounts)
@@ -59,6 +64,50 @@ const Options = () => {
     }
 
     /*
+        Build form options Gemeente (conditional based on whether 'gemeente' is selected)
+    */
+    function buildFullTextOptionsGemeente() {
+        return (
+            <div className="full-text-options__gemeente">
+                <h4 className="options-form__full-text-options__subtitle">Gemeente</h4>
+                <label className="full-text-options__gemeente__label">Waar:</label>
+                <select
+                    className="full-text-options__gemeente__selectbox"
+                    value={fullTextOptionsGemeente}
+                    onChange={(e) => setFullTextOptionsGemeente(e.target.value)}
+                >
+                    <option value={"overal"}>overal</option>
+                    <option value={"eerste"}>alleen eerste</option>
+                </select>
+            </div>
+        );
+    }
+
+    /*
+    Build form options Snelheid (conditional based on whether 'snelheid' is selected)
+    */
+    function buildFullTextOptionsSnelheid() {
+        return (
+            <div className="full-text-options__snelheid">
+                <h4 className="options-form__full-text-options__subtitle">Snelheid</h4>
+
+                <label className="full-text-options__snelheid__label">Waar:</label>
+                <select
+                    className="full-text-options__snelheid__selectbox"
+                    value={fullTextOptionsSnelheid}
+                    onChange={(e) => setFullTextOptionsSnelheid(e.target.value)}
+                >
+                    <option value={"overal"}>overal</option>
+                    <option value={"eerste"}>alleen eerste</option>
+                </select>
+
+                <label className="full-text-options__snelheid-digits__label">Cijfers achter de komma:</label>
+                <input className="full-text-options__snelheid-digits__input" type="number" name="snelheid-digits" min="0" max="4" value={fullTextOptionsSnelheidDigits} onChange={(e) => setFullTextOptionsSnelheidDigits(e.target.value)}></input>
+            </div>
+        );
+    }
+
+    /*
     Update select field values and state on change
     */
     function handleChange(e, i) {
@@ -66,14 +115,14 @@ const Options = () => {
         data[i] = e.target.value;
         setColumnOptions(data);
 
-        // if (data[i] === "snelheid") {
-        //     console.log("snelheid selected");
-        //     // setSnelheidSelected(true);
-        // } else {
-        //     console.log("snelheid NIET selected");
-        //     // setSnelheidSelected(true);
-        // }
-
+        // Show or hide additional full text options based on what is selected
+        if (data.includes("gemeente") || data.includes("snelheid")) {
+            setShowAdditionalOptions(true);
+            data.includes("gemeente") ? setGemeenteSelected(true) : setGemeenteSelected(false);
+            data.includes("snelheid") ? setSnelheidSelected(true) : setSnelheidSelected(false);
+        } else {
+            setShowAdditionalOptions(false);
+        }
     }
 
     /*
@@ -120,43 +169,19 @@ return (
                 { buildColumnOptions() } {/* Select field for each column */}
             </div>
 
-            <div className="options-form__full-text-options">
+            {showAdditionalOptions &&
+                <div className="options-form__full-text-options">
 
-                <h3 className="options-form__full-text-options__title">Extra opties</h3>
+                    <h3 className="options-form__full-text-options__title">Extra opties</h3>
 
-                {/* Als gemeente geselecteerd is -> overal of alleen eerste */}
-                <div className="full-text-options__gemeente">
-                    <h4 className="options-form__full-text-options__subtitle">Gemeente</h4>
-                    <label className="full-text-options__gemeente__label">Waar:</label>
-                    <select
-                        className="full-text-options__gemeente__selectbox"
-                        value={fullTextOptionsGemeente}
-                        onChange={(e) => setFullTextOptionsGemeente(e.target.value)}
-                    >
-                        <option value={"overal"}>overal</option>
-                        <option value={"eerste"}>alleen eerste</option>
-                    </select>
+                    {/* Als gemeente geselecteerd is -> overal of alleen eerste */}
+                    {gemeenteSelected && buildFullTextOptionsGemeente()}
+
+                    {/* Als snelheid geselecteerd is -> overal of alleen eerste + hoeveel cijvers achter de komma */}
+                    {snelheidSelected && buildFullTextOptionsSnelheid()}
+
                 </div>
-
-                {/* Als snelheid geselecteerd is -> overal of alleen eerste + hoeveel cijvers achter de komma */}
-                <div className="full-text-options__snelheid">
-                    <h4 className="options-form__full-text-options__subtitle">Snelheid</h4>
-
-                    <label className="full-text-options__snelheid__label">Waar:</label>
-                    <select
-                        className="full-text-options__snelheid__selectbox"
-                        value={fullTextOptionsSnelheid}
-                        onChange={(e) => setFullTextOptionsSnelheid(e.target.value)}
-                    >
-                        <option value={"overal"}>overal</option>
-                        <option value={"eerste"}>alleen eerste</option>
-                    </select>
-
-                    <label className="full-text-options__snelheid-digits__label">Cijfers achter de komma:</label>
-                    <input className="full-text-options__snelheid-digits__input" type="number" name="snelheid-digits" min="0" max="4" value={fullTextOptionsSnelheidDigits} onChange={(e) => setFullTextOptionsSnelheidDigits(e.target.value)}></input>
-                </div>
-
-            </div>
+            }
 
             <button className="options-form__button" type="submit">Verwerk</button> 
         </form> 
