@@ -24,12 +24,12 @@ const Home = () => {
 
         // Get first line columns from main process 
         // + navigate to Options page
-        ipcRenderer.on('columns:detected', (columns) => {
+        ipcRenderer.on('columns:detected', (args) => {
             navigate("../options", {
                 state: {
-                    text: text,
-                    source: source,
-                    columns: columns
+                    text: args.text,
+                    source: args.source,
+                    columns: args.columns
                 }
             })
         })

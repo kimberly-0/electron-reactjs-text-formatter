@@ -8,8 +8,9 @@ const Options = () => {
 
     // Data that was sent from Home page
     const location = useLocation();
-    let columns = location.state.columns;
     const text = location.state.text;
+    const columns = location.state.columns;
+    const source = location.state.source;
 
     // Options form data
     const [columnOptions, setColumnOptions] = useState([]);
@@ -75,7 +76,7 @@ const Options = () => {
         e.preventDefault();
 
         // Send text to main process
-        ipcRenderer.send('submit:options', {text, columnOptions})
+        ipcRenderer.send('submit:options', {text, source, columnOptions})
 
         // Get formatted text from main process 
         // + navigate to Results page

@@ -37,7 +37,7 @@ function capitalizeFirstLetterOfEachWord(line, splitChar) {
     const arr = line.split(splitChar);
     for (var i = 0; i < arr.length; i++) {
         string = arr[i];
-        if (string !== "m" && string !== "et" && string !== "en") {
+        if (string !== "" && string !== "m" && string !== "et" && string !== "en") {
             arr[i] = string[0].toUpperCase() + string.slice(1);
         }
     }
@@ -48,30 +48,27 @@ function capitalizeFirstLetterOfEachWord(line, splitChar) {
 ---- FUNCTIONALITY ----
 */
 
-let source = ""; // TO DELETE LATER and pass through funcs  --------------------
 // Get text form input from Home page
 ipcMain.on('submit:text', (e, args) => {
-    source = args.source;
     detectColumns(args.text, args.source);  
 });
 
 // Detect existing columns of first line
 function detectColumns(text, source) {
-
     const lines = splitTextIntoLines(text);
     const columns = splitLineIntoColumns(lines[0], source);
 
     // Send columns to renderer -> to select an option for each column
-    mainWindow.webContents.send('columns:detected', columns);
+    mainWindow.webContents.send('columns:detected', {text, source, columns});
 }
 
 // Get options form input from Options page
 ipcMain.on('submit:options', (e, args) => {
-    formatText(args.text, args.columnOptions);
+    formatText(args.text, args.source, args.columnOptions);
 });
 
 // Format text based on options selected
-function formatText(text, columnOptions) {
+function formatText(text, source, columnOptions) {
     const formattedText = [];
     const lines = splitTextIntoLines(text);
     
