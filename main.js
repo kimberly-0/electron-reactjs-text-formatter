@@ -175,30 +175,6 @@ ipcMain.on('copy:result', (e, result) => {
 });
 
 /*
----- CREATE WINDOWS ----
-*/
-let mainWindow;
-function createMainWindow() {
-    mainWindow = new BrowserWindow({
-        title: "Tekst opmaken",
-        width: isDev ? 1300 : 1000,
-        height: 800,
-        backgroundColor: "white",
-        webPreferences: {
-            nodeIntegration: false,
-            worldSafeExecuteJavaScript: true,
-            contextIsolation: true,
-            preload: path.join(__dirname, 'preload.js')
-        }
-    })
-
-    // Open developer tools in window if in DEV mode
-    if (isDev) { mainWindow.webContents.openDevTools(); }
-
-    mainWindow.loadFile(path.join(__dirname, 'index.html'));
-}
-
-/*
 ---- CREATE MENUS ----
 */
 
@@ -206,8 +182,6 @@ function createMainWindow() {
 const applicationMenuTemplate = [{
     label: app.name,
     submenu: [
-        // { label: 'About', click: createAboutWindow }, 
-        // { type: "separator" }, 
         { label: 'Quit', accelerator: "Command+Q", click: () => app.quit() }
     ]},{
         label: "Edit",
@@ -246,11 +220,36 @@ const contextMenuTemplate = [
 ];
 
 /*
+---- CREATE WINDOWS ----
+*/
+let mainWindow;
+function createMainWindow() {
+    mainWindow = new BrowserWindow({
+        title: "Tekst opmaken",
+        width: isDev ? 1300 : 1000,
+        height: 800,
+        backgroundColor: "white",
+        webPreferences: {
+            nodeIntegration: false,
+            worldSafeExecuteJavaScript: true,
+            contextIsolation: true,
+            preload: path.join(__dirname, 'preload.js')
+        }
+    })
+
+    // Open developer tools in window if in DEV mode
+    if (isDev) { mainWindow.webContents.openDevTools(); }
+
+    mainWindow.loadFile(path.join(__dirname, 'index.html'));
+}
+
+/*
 ---- START AND STOP RUNNING APP ----
 */
 
 // App is ready
 app.whenReady().then(() => {
+
     createMainWindow();
 
     // Implement menus
@@ -269,6 +268,9 @@ app.whenReady().then(() => {
             createMainWindow()
         }
     })
+
+    // Send app info to console
+    console.log(app.name + " | version: " +  app.getVersion());
 });
 
 // If not on a Mac, then quit the process when windows are closed, otherwise it keeps running
