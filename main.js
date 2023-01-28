@@ -64,72 +64,101 @@ function detectColumns(text, source) {
 
 // Get options form input from Options page
 ipcMain.on('submit:options', (e, args) => {
-    formatText(args.text, args.source, args.columnOptions);
+    formatText(args.text, args.source, args.columnOptions, args.fullTextOptionsGemeente, args.fullTextOptionsSnelheid, args.fullTextOptionsSnelheidDigits);
 });
 
 // Format text based on options selected
-function formatText(text, source, columnOptions) {
+function formatText(text, source, columnOptions, optionsGemeente, optionsSnelheid, snelheidDigits) {
     const formattedText = [];
+
+    // Iterate through the lines in the text and format each line
     const lines = splitTextIntoLines(text);
-    
-    // Iterate through the lines in the text
     for (let l = 0; l < lines.length; l++) {
-        let formattedLine = [];
+
         const columns = splitLineIntoColumns(lines[l]);
 
-        // If there's only 1 column and option to delete is selected, leave for loop immediately
-        if (columns.length == 1 && columnOptions[0] == "") {
-            break;
-        }
-
-        // Iterate through columns of the line
+        // Remove unnecessary columns from Line and columnOptions
+        const newColumnOptions = [];
+        const lineWithOnlyNecessaryColumns = [];
         for (let c = 0; c < columns.length; c++) {
-            switch (columnOptions[c]) {
-                case 'plaats':
-                    formattedLine.push(columns[c] + ".");
-                    break;
-                case 'naam':
-                    formattedLine.push(columns[c] + ",");
-                    break;
-                case 'gemeente':
-                    formattedLine.push(columns[c] + ",");
-                    break;
-                case 'snelheid':
-                    // Haal nummers achter te komma of punt weg
-                    const beforeComma = columns[c].split(/[,.]/);
-                    formattedLine.push(beforeComma[0] + " m");
-                    break;
-                default:
-                    columns[c] = "";
-                    break;
+            if (columnOptions[c] === "") {
+                continue;
+            } else {
+                if (l > 0) { // If this is not the first line
+                    if (columnOptions[c] === "gemeente" && optionsGemeente == "eerste") {
+                        continue;
+                    }
+                    if (columnOptions[c] === "snelheid" && optionsSnelheid == "eerste") {
+                        continue;
+                    }
+                }
+                lineWithOnlyNecessaryColumns.push(columns[c]);
+                newColumnOptions.push(columnOptions[c]);
             }
         }
 
+        // If there are no columns left, leave loop immediatly
+        if (lineWithOnlyNecessaryColumns.length <= 0) {
+            break;
+        }
+
+        // Add styling to / format each column of the line
+        const formattedLineParts = [];
+        for (let c = 0; c < lineWithOnlyNecessaryColumns.length; c++) {
+            const isLastColumn = c < newColumnOptions.length - 1 ? false : true;
+            const formattedColumn = formatColumn(lineWithOnlyNecessaryColumns[c], newColumnOptions[c],snelheidDigits, isLastColumn);
+            formattedLineParts.push(formattedColumn);
+        }
+
         // Merge columns into one line
-        let formattedLineMerged = formattedLine.join(' ').trim();
+        let formattedLine = formattedLineParts.join(' ').trim();
 
         // If source is KBDB, change from caps to small letters with first letter cap
         if (source == "kbdb") {
-            formattedLineMerged = formattedLineMerged.toLowerCase();
-            formattedLineMerged = capitalizeFirstLetterOfEachWord(formattedLineMerged, " ");
-            formattedLineMerged = capitalizeFirstLetterOfEachWord(formattedLineMerged, "-");
-            formattedLineMerged = capitalizeFirstLetterOfEachWord(formattedLineMerged, "(");
+            formattedLine = formattedLine.toLowerCase();
+            const capitalizeAfterSymbols = [" ", "-", "(", "&", "/"];
+            for (let s = 0; s < capitalizeAfterSymbols.length; s++) {
+                formattedLine = capitalizeFirstLetterOfEachWord(formattedLine, capitalizeAfterSymbols[s]);
+            }
         }
 
         // If this is the last line, end with '.', otherwise end line with ';'
         if (l == lines.length - 1) {
-            formattedLineMerged = formattedLineMerged + ".";
+            formattedLine = formattedLine + ".";
         } else {
-            formattedLineMerged = formattedLineMerged + "; ";
+            formattedLine = formattedLine + "; ";
         }
 
         // Add line to formatted text
-        formattedText.push(formattedLineMerged);
+        formattedText.push(formattedLine);
     }
 
     // Send formattedText to renderer
     let formattedTextMerged = formattedText.join('');
     mainWindow.webContents.send('text:formatted', formattedTextMerged);
+}
+
+function formatColumn(columnValue, currColumnOption, numOfDigitsAfterDecimalPoint, isLastColumn) {
+
+    if (currColumnOption === "plaats") {
+        return columnValue + ".";
+
+    } else if (currColumnOption === "naam" || currColumnOption === "gemeente") {
+        return isLastColumn ? columnValue : columnValue + ",";
+
+    } else if (currColumnOption === "snelheid") {
+        const parts = columnValue.split(/[,.]/);
+
+        if (numOfDigitsAfterDecimalPoint === 0) {
+            return parts[0] + " m";
+        } else if (numOfDigitsAfterDecimalPoint > 0) {
+            let partAfterDecimalPoint = parts[1].slice(0, numOfDigitsAfterDecimalPoint);
+            return parts[0] + "." + partAfterDecimalPoint + " m";
+        } else {
+            return columnValue + " m";
+        }
+    }
+    return columnValue;
 }
 
 // Get result form input from Result page

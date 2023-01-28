@@ -14,6 +14,9 @@ const Options = () => {
 
     // Options form data
     const [columnOptions, setColumnOptions] = useState([]);
+    const [fullTextOptionsGemeente, setFullTextOptionsGemeente] = useState("overal");
+    const [fullTextOptionsSnelheid, setFullTextOptionsSnelheid] = useState("overal");
+    const [fullTextOptionsSnelheidDigits, setFullTextOptionsSnelheidDigits] = useState(0);
 
     /*
     Set initial select values 
@@ -31,17 +34,15 @@ const Options = () => {
     Build form components for each column
     */
     function buildColumnOptions() {
-        
         const arr = [];
         for (let i = 0; i < columns.length; i++) {
-
             arr.push(
-                <div className="select-field-container" key={i}>
+                <div id={"select-field-container-" + i} className="select-field-container" key={i}>
                     <label className="options-form__label">{columns[i]}</label>
                     <select
                         className="options-form__selectbox"
                         id={"column-" + i}
-                        value = {columnOptions[i]}
+                        value={columnOptions[i]}
                         onChange={(e) => handleChange(e, i)}
                         // required
                     >
@@ -64,6 +65,15 @@ const Options = () => {
         let data = [...columnOptions];
         data[i] = e.target.value;
         setColumnOptions(data);
+
+        // if (data[i] === "snelheid") {
+        //     console.log("snelheid selected");
+        //     // setSnelheidSelected(true);
+        // } else {
+        //     console.log("snelheid NIET selected");
+        //     // setSnelheidSelected(true);
+        // }
+
     }
 
     /*
@@ -76,7 +86,14 @@ const Options = () => {
         e.preventDefault();
 
         // Send text to main process
-        ipcRenderer.send('submit:options', {text, source, columnOptions})
+        ipcRenderer.send('submit:options', {
+            text, 
+            source, 
+            columnOptions,
+            fullTextOptionsGemeente,
+            fullTextOptionsSnelheid,
+            fullTextOptionsSnelheidDigits
+        })
 
         // Get formatted text from main process 
         // + navigate to Results page
@@ -95,11 +112,51 @@ return (
 
         {/* <h5>Voorbeeld: { columns.join(' ') }</h5> */}
 
-        <h5>Selecteer opties</h5>
+        <h3>Selecteer opties</h3>
 
         <form id="options-form" onSubmit={handleSubmit}>
 
-            { buildColumnOptions() } {/* Select field for each column */}
+            <div className="options-form__column-options">
+                { buildColumnOptions() } {/* Select field for each column */}
+            </div>
+
+            <div className="options-form__full-text-options">
+
+                <h3 className="options-form__full-text-options__title">Extra opties</h3>
+
+                {/* Als gemeente geselecteerd is -> overal of alleen eerste */}
+                <div className="full-text-options__gemeente">
+                    <h4 className="options-form__full-text-options__subtitle">Gemeente</h4>
+                    <label className="full-text-options__gemeente__label">Waar:</label>
+                    <select
+                        className="full-text-options__gemeente__selectbox"
+                        value={fullTextOptionsGemeente}
+                        onChange={(e) => setFullTextOptionsGemeente(e.target.value)}
+                    >
+                        <option value={"overal"}>overal</option>
+                        <option value={"eerste"}>alleen eerste</option>
+                    </select>
+                </div>
+
+                {/* Als snelheid geselecteerd is -> overal of alleen eerste + hoeveel cijvers achter de komma */}
+                <div className="full-text-options__snelheid">
+                    <h4 className="options-form__full-text-options__subtitle">Snelheid</h4>
+
+                    <label className="full-text-options__snelheid__label">Waar:</label>
+                    <select
+                        className="full-text-options__snelheid__selectbox"
+                        value={fullTextOptionsSnelheid}
+                        onChange={(e) => setFullTextOptionsSnelheid(e.target.value)}
+                    >
+                        <option value={"overal"}>overal</option>
+                        <option value={"eerste"}>alleen eerste</option>
+                    </select>
+
+                    <label className="full-text-options__snelheid-digits__label">Cijfers achter de komma:</label>
+                    <input className="full-text-options__snelheid-digits__input" type="number" name="snelheid-digits" min="0" max="4" value={fullTextOptionsSnelheidDigits} onChange={(e) => setFullTextOptionsSnelheidDigits(e.target.value)}></input>
+                </div>
+
+            </div>
 
             <button className="options-form__button" type="submit">Verwerk</button> 
         </form> 
