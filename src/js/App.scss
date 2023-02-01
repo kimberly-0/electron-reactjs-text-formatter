@@ -182,6 +182,10 @@ button:hover {
 
 /* ----- Page content | Options page ----- */
 
+#options-form {
+    padding-bottom: 3em;
+}
+
 .options-form__container {
     display: flex;
     justify-content: space-between;
