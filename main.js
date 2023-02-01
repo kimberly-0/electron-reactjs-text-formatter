@@ -1,6 +1,8 @@
 const path = require('path');
 const { app, BrowserWindow, Menu, ipcMain, MenuItem  } = require('electron');
 
+if (require('electron-squirrel-startup')) app.quit();
+
 const isMac = process.platform === 'darwin'; // Check if platform is a Mac (darwin: mac, win32: windows, linux: linux)
 
 process.env.NODE_ENV = 'production';
@@ -232,7 +234,8 @@ function createMainWindow() {
             worldSafeExecuteJavaScript: true,
             contextIsolation: true,
             preload: path.join(__dirname, 'preload.js')
-        }
+        },
+        // icon: path.join(__dirname, 'src/js/assets/logo/icon.icns')
     })
 
     // Open developer tools in window if in DEV mode
@@ -268,7 +271,7 @@ app.whenReady().then(() => {
     })
 
     // Send app info to console
-    console.log(app.name + " | version: " +  app.getVersion());
+    // console.log(app.name + " | version: " +  app.getVersion());
 });
 
 // If not on a Mac, then quit the process when windows are closed, otherwise it keeps running
