@@ -7,3 +7,7 @@ dist/
 
 ## Test folder
 src/test/
+src/__tests__/
+
+## Distributables
+out/
