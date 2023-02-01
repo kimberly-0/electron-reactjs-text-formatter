@@ -35,9 +35,12 @@ input[type=number] {
 
 textarea {
     padding: 15px;
-    width: 700px;
-    max-width: 1000px;
-    height: 400px;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 400px;
+    max-width: 1200px;
+    min-height: 400px;
+    max-height: 800px;
 }
 
 select {
