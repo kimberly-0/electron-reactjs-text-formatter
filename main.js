@@ -5,7 +5,7 @@ if (require('electron-squirrel-startup')) app.quit();
 
 const isMac = process.platform === 'darwin'; // Check if platform is a Mac (darwin: mac, win32: windows, linux: linux)
 
-process.env.NODE_ENV = 'production';
+// process.env.NODE_ENV = 'production';
 const isDev = process.env.NODE_ENV !== 'production'; // Check if we're in DEV mode
 
 // Auto reload window on change if in DEV mode
@@ -227,7 +227,7 @@ function createMainWindow() {
     mainWindow = new BrowserWindow({
         title: "Tekst opmaken",
         width: isDev ? 1300 : 1000,
-        height: 800,
+        height: 850,
         backgroundColor: "white",
         webPreferences: {
             nodeIntegration: false,

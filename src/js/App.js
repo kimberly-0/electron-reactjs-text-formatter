@@ -5,17 +5,20 @@ import Home from './pages/Home';
 import Options from './pages/Options';
 import Result from './pages/Result';
 
+import Menu from './components/Menu';
+
 import './App.scss';
 
 const App = () => {
  return (
     <>
-       <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/options" element={<Options />} />
-          <Route path="/result" element={<Result />} />
-       </Routes>
+      <Menu />
 
+      <Routes>
+         <Route path="/" element={<Home />} />
+         <Route path="/options" element={<Options />} />
+         <Route path="/result" element={<Result />} />
+      </Routes>
     </>
  );
 };

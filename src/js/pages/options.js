@@ -2,8 +2,6 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 
-import Header from '../components/Header';
-
 const Options = () => {
 
     // Data that was sent from Home page
@@ -44,6 +42,7 @@ const Options = () => {
             arr.push(
                 <div id={"select-field-container-" + i} className="select-field-container" key={i}>
                     <label className="options-form__label">{columns[i]}</label>
+                    <div className="horizontal-line"></div>
                     <select
                         className="options-form__selectbox"
                         id={"column-" + i}
@@ -68,7 +67,7 @@ const Options = () => {
     */
     function buildFullTextOptionsGemeente() {
         return (
-            <div className="full-text-options__gemeente">
+            <div className="full-text-option-container full-text-options__gemeente">
                 <h4 className="options-form__full-text-options__subtitle">Gemeente</h4>
                 <label className="full-text-options__gemeente__label">Waar:</label>
                 <select
@@ -88,7 +87,7 @@ const Options = () => {
     */
     function buildFullTextOptionsSnelheid() {
         return (
-            <div className="full-text-options__snelheid">
+            <div className="full-text-option-container full-text-options__snelheid">
                 <h4 className="options-form__full-text-options__subtitle">Snelheid</h4>
 
                 <label className="full-text-options__snelheid__label">Waar:</label>
@@ -156,32 +155,31 @@ const Options = () => {
     }
 
 return (
-    <div className="options-page">
-        <Header />
-
-        {/* <h5>Voorbeeld: { columns.join(' ') }</h5> */}
-
-        <h3>Selecteer opties</h3>
+    <div className="options-page page">
+        
+        <h1 className="header-title">Opties selecteren</h1>
 
         <form id="options-form" onSubmit={handleSubmit}>
 
-            <div className="options-form__column-options">
-                { buildColumnOptions() } {/* Select field for each column */}
-            </div>
+            <div className="options-form__container">
 
-            {showAdditionalOptions &&
-                <div className="options-form__full-text-options">
-
-                    <h3 className="options-form__full-text-options__title">Extra opties</h3>
-
-                    {/* Als gemeente geselecteerd is -> overal of alleen eerste */}
-                    {gemeenteSelected && buildFullTextOptionsGemeente()}
-
-                    {/* Als snelheid geselecteerd is -> overal of alleen eerste + hoeveel cijvers achter de komma */}
-                    {snelheidSelected && buildFullTextOptionsSnelheid()}
-
+                <div className="options-form__container__column-options">
+                    { buildColumnOptions() } {/* Select field for each column */}
                 </div>
-            }
+
+                {showAdditionalOptions &&
+                    <div className="options-form__container__full-text-options">
+
+                        {/* Als gemeente geselecteerd is -> overal of alleen eerste */}
+                        {gemeenteSelected && buildFullTextOptionsGemeente()}
+
+                        {/* Als snelheid geselecteerd is -> overal of alleen eerste + hoeveel cijvers achter de komma */}
+                        {snelheidSelected && buildFullTextOptionsSnelheid()}
+
+                    </div>
+                }
+
+            </div>
 
             <button className="options-form__button" type="submit">Verwerk</button> 
         </form> 

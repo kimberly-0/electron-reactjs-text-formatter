@@ -1,14 +1,114 @@
+$background-grey: #E2DFDF;
+$background-light-grey: #F1F1F1;
+$text-grey: #868585;
+$border-grey: #EAEAEA;
+
+$border-radius-large: 10px;
+$border-radius-small: 5px;
+$border-width: 2px;
+
+$speed: .5s;
+$anim: ease-out;
+$fade-out: opacity .2s $anim, border-color .2s $anim, border-width $speed $anim, width $speed $anim, height $speed $anim, padding $speed $anim,margin $speed $anim, font-size $speed $anim;
+
+* {
+    box-sizing: border-box;
+}
+
 body {
-    background-color: #EAEAEA;
-    padding: 2em 4em 2em 4em;
+    width: 100%;
+    padding: 0;
+    margin: 0;
     font-family: sans-serif;
     line-height: 1.5;
 }
 
+#root {
+    display: flex;
+}
+
+/* ----- Page & Menu containers ----- */
+
+.menu, .page {
+    display: inline-block;
+    vertical-align: top;
+    height: 100vh;
+}
+
+.menu {
+    width: 25%;
+    min-width: min-content;
+    padding: 4em 2em 4em 2em;
+    background-color: $background-grey;
+    transition: $fade-out;
+}
+
+.page {
+    flex-grow: 1;
+    // max-width: 75%;
+    padding: 3em 4em 3em 4em;
+    margin: 0;
+}
+
+/* ----- Menu / sidebar content ----- */
+
+.menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    white-space: pre;
+}
+
+.menu ul li a {
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 18px;
+    color: $text-grey;
+    transition: $fade-out;
+}
+
+.vertical-progress-line {
+    border-left: solid;
+    border-width: 2.5px;
+    border-color: $text-grey;
+    height: 50px;
+    margin-left: 4px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    transition: $fade-out;
+}
+
+.active {
+    border-color: black;
+    a {
+        color: black !important;
+    }
+}
+
+@media screen and (max-width: 780px) {
+    .menu {
+        width: 0;
+        padding: 0;
+    }
+
+    .menu ul li a {
+        opacity: 0;
+        font-size: 0;
+    }
+
+    .vertical-progress-line {
+        border-width: 0;
+        border-color: transparent;
+        height: 0;
+        margin: 0;
+    }
+}
+
+/* ----- Page content | all ----- */
+
 h1 {
     margin-top: 0;
     margin-bottom: 50px;
-    color: #adadad;
 }
 
 label {
@@ -20,12 +120,30 @@ textarea, input {
     display: block;
     margin-top: 8px;
     margin-bottom: 8px;
-    border-style: none;
-    border-radius: 4px;
-    box-shadow: 0 1px 10px 0 rgb(0 0 0 / 10%), 0 2px 15px 0 rgb(0 0 0 / 5%);
+    // border-style: none;
+    // box-shadow: 0 1px 10px 0 rgb(0 0 0 / 10%), 0 2px 15px 0 rgb(0 0 0 / 5%);
+    border-style: solid;
+    border-width: $border-width;
+    border-color: $border-grey;
     font-family: inherit;
     font-size: inherit;
     line-height: inherit;
+}
+
+textarea {
+    margin-top: 2em;
+    margin-bottom: 2em;
+    padding: 15px;
+    width: 100%;
+    min-width: 400px;
+    max-width: 1200px;
+    min-height: 400px;
+    max-height: 800px;
+    border-radius: $border-radius-large;
+}
+
+input {
+    border-radius: $border-radius-small;
 }
 
 input[type=number] {
@@ -33,32 +151,15 @@ input[type=number] {
     font-size: 14px;
 }
 
-textarea {
-    padding: 15px;
-    box-sizing: border-box;
-    width: 100%;
-    min-width: 400px;
-    max-width: 1200px;
-    min-height: 400px;
-    max-height: 800px;
-}
-
 select {
     display: inline-block;
     padding: 4px;
-    border-style: none;
-    border-radius: 4px;
-    box-sizing: border-box;
+    border-radius: $border-radius-small;
+    // border-style: none;
+    border-style: solid;
+    border-width: $border-width;
+    border-color: $border-grey;
     font-size: 14px;
-}
-
-.select-field-container select {
-    margin-bottom: 15px;
-}
-
-.select-field-container label {
-    display: inline-block;
-    margin-right: 20px;
 }
 
 button {
@@ -66,9 +167,8 @@ button {
     padding: 10px 20px 10px 20px;
     margin-top: 10px;
     border-style: none;
-    border-radius: 4px;
-    box-shadow: 0 1px 10px 0 rgb(0 0 0 / 10%), 0 2px 15px 0 rgb(0 0 0 / 5%);
-    box-sizing: border-box;
+    border-radius: $border-radius-small;
+    // box-shadow: 0 1px 10px 0 rgb(0 0 0 / 10%), 0 2px 15px 0 rgb(0 0 0 / 5%);
     font-size: 16px;
     text-align: center;
     text-decoration: none;
@@ -80,21 +180,40 @@ button:hover {
     transition: background 0.2s;
 }
 
-.options-form__column-options {
+/* ----- Page content | Options page ----- */
+
+.options-form__container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.options-form__container__column-options {
     display: inline-block;
+    // flex-grow: 1;
     margin-right: 10px;
+    width: 100%;
+    max-width: 500px;
+
 }
 
-.options-form__full-text-options {
+.options-form__container__full-text-options {
     display: inline-block;
+    flex-grow: 1;
     vertical-align: top;
+    margin-left: 30px;
     padding: 25px;
-    margin-left: 70px;
-    border-radius: 4px;
-    background-color: #cecece;
+    border-radius: $border-radius-large;
+    background-color: $background-light-grey;
+    min-width: min-content;
 }
 
-.options-form__full-text-options__title {
+@media (max-width: 650px) {
+    .options-form__container__full-text-options {
+        margin-left: 10px;
+    }
+}
+
+.full-text-option-container:first-child .options-form__full-text-options__subtitle {
     margin-top: 0;
 }
 
@@ -102,11 +221,44 @@ button:hover {
     margin-bottom: 0;
 }
 
-.options-form__full-text-options label {
+.options-form__button {
+    margin-top: 30px;
+}
+
+.select-field-container {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.select-field-container select, .select-field-container label {
+    // display: block;
+    margin-bottom: 15px;
+}
+
+.select-field-container:last-child select,
+.select-field-container:last-child label {
+    margin-bottom: 0;
+}
+
+.select-field-container .horizontal-line {
+    flex-grow: 1;
+    height: 15px;
+    border-bottom: dashed;
+    border-width: $border-width;
+    border-color: $border-grey;
+    opacity: .8;
+    margin: 0 15px;
+}
+
+.options-form__container__full-text-options label {
     font-size: 14px;
     margin-top: 15px;
     margin-bottom: 5px;
 }
+
+/* ----- Page content | Result page ----- */
 
 #result-form button {
     display: inline-block;
@@ -114,15 +266,10 @@ button:hover {
 
 #result-form button:first-of-type {
     background-color: #07bc0c;
-    margin-right: 10px;
+    margin-right: 20px;
 }
 
 #result-form button:first-of-type:hover {
     background-color: #029106;
 }
 
-@media (max-width: 650px) {
-    .options-form__full-text-options {
-        margin-left: 0;
-    }
-}

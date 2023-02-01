@@ -2,8 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
-import Header from '../components/Header';
-
 const Home = () => {
 
     // Text form data
@@ -36,8 +34,9 @@ const Home = () => {
     }
 
 return (
-    <div className="home-page">
-        <Header />
+    <div className="home-page page">
+        
+        <h1 className="header-title">Tekst invoeren</h1>
 
         <form id="text-form" onSubmit={handleSubmit}>
             <label className="text-form__label">Onopgemaakte uitslag:</label>

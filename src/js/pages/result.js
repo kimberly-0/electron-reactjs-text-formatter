@@ -4,8 +4,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import Header from '../components/Header';
-
 const Result = () => {
 
     const navigate = useNavigate();
@@ -47,12 +45,13 @@ const Result = () => {
     });
 
 return (
-    <div className="result-page">
-        <Header />
+    <div className="result-page page">
+        
+        <h1 className="header-title">Resultaat</h1>
 
         <form id="result-form" onSubmit={copyValue}>
 
-            <label className="result-form__label">Resultaat:</label>
+            <label className="result-form__label">Opgemaakte uitslag:</label>
             <textarea 
                 className="result-form__textfield"
                 name="result" 
