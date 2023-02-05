@@ -51,8 +51,8 @@ function capitalizeFirstLetterOfEachWord(line, splitChar) {
 */
 
 // Get text form input from Home page
-ipcMain.on('submit:text', (e, args) => {
-    detectColumns(args.text, args.source);  
+ipcMain.on('detectColumns', (e, args) => {
+    detectColumns(args.data.unformattedText, args.data.source);  
 });
 
 // Detect existing columns of first line
@@ -61,16 +61,30 @@ function detectColumns(text, source) {
     const columns = splitLineIntoColumns(lines[0], source);
 
     // Send columns to renderer -> to select an option for each column
-    mainWindow.webContents.send('columns:detected', {text, source, columns});
+    mainWindow.webContents.send('columnsDetected', {text, source, columns});
 }
 
 // Get options form input from Options page
-ipcMain.on('submit:options', (e, args) => {
-    formatText(args.text, args.source, args.columnOptions, args.fullTextOptionsGemeente, args.fullTextOptionsSnelheid, args.fullTextOptionsSnelheidDigits);
+ipcMain.on('formatText', (e, args) => {
+    const columnsOptions = args.data.columnsOptions.map(value => value.columnType);
+
+    let fullTextOptionsGemeenteWaar = "";
+    let fullTextOptionsSnelheidWaar = "";
+    let fullTextOptionsSnelheidNummers = 0;
+
+    args.data.fullTextOptions.forEach(function (item, index) {
+        if (item.columnType === 'gemeente' && item.option === 'waar') fullTextOptionsGemeenteWaar = item.selection;
+        if (item.columnType === 'snelheid') {
+            if (item.option === 'waar') fullTextOptionsSnelheidWaar = item.selection;
+            if (item.option === 'nummers') fullTextOptionsSnelheidNummers = item.selection;
+        }
+    });
+
+    formatText(args.data.unformattedText, args.data.source, columnsOptions, fullTextOptionsGemeenteWaar, fullTextOptionsSnelheidWaar, fullTextOptionsSnelheidNummers); 
 });
 
 // Format text based on options selected
-function formatText(text, source, columnOptions, optionsGemeente, optionsSnelheid, snelheidDigits) {
+function formatText(text, source, columnOptions, ftOptionsGemeenteWaar, ftOptionsSnelheidWaar, ftOptionsSnelheidNummers) {
     const formattedText = [];
 
     // Iterate through the lines in the text and format each line
@@ -88,10 +102,10 @@ function formatText(text, source, columnOptions, optionsGemeente, optionsSnelhei
                 continue;
             } else {
                 if (l > 0) { // If this is not the first line
-                    if (columnOptions[c] === "gemeente" && optionsGemeente == "eerste") {
+                    if (columnOptions[c] === "gemeente" && ftOptionsGemeenteWaar == "eerste") {
                         continue;
                     }
-                    if (columnOptions[c] === "snelheid" && optionsSnelheid == "eerste") {
+                    if (columnOptions[c] === "snelheid" && ftOptionsSnelheidWaar == "eerste") {
                         continue;
                     }
                 }
@@ -109,7 +123,7 @@ function formatText(text, source, columnOptions, optionsGemeente, optionsSnelhei
         const formattedLineParts = [];
         for (let c = 0; c < lineWithOnlyNecessaryColumns.length; c++) {
             const isLastColumn = c < newColumnOptions.length - 1 ? false : true;
-            const formattedColumn = formatColumn(lineWithOnlyNecessaryColumns[c], newColumnOptions[c],snelheidDigits, isLastColumn);
+            const formattedColumn = formatColumn(lineWithOnlyNecessaryColumns[c], newColumnOptions[c],ftOptionsSnelheidNummers, isLastColumn);
             formattedLineParts.push(formattedColumn);
         }
 
@@ -138,7 +152,7 @@ function formatText(text, source, columnOptions, optionsGemeente, optionsSnelhei
 
     // Send formattedText to renderer
     let formattedTextMerged = formattedText.join('');
-    mainWindow.webContents.send('text:formatted', formattedTextMerged);
+    mainWindow.webContents.send('textFormatted', formattedTextMerged);
 }
 
 function formatColumn(columnValue, currColumnOption, numOfDigitsAfterDecimalPoint, isLastColumn) {

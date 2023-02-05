@@ -16,6 +16,12 @@ const Menu = () => {
         page_3_result_active = true;
     }
    
+    /*
+    Change this to dynamic based on steps in the form
+        get title
+        get whether index is currentindex
+        get link
+    */
 
 return(
     <>

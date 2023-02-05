@@ -12,7 +12,7 @@ const Result = () => {
     const location = useLocation();
     let formattedText = location.state.formattedText;
 
-    // Result form data
+    // Result - form data
     const [result, setResult] = useState(formattedText);
 
     /*
