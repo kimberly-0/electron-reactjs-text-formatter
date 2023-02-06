@@ -23,6 +23,7 @@ const INITIAL_DATA = {
 }
 
 let lastUnformattedText = "";
+let lastSource = "";
 
 export default function Form() {
 
@@ -57,6 +58,7 @@ export default function Form() {
         setSnelheidSelected(false);
         // Update last formatted text
         lastUnformattedText = data.unformattedText;
+        lastsource = data.source;
     }
 
     function updateColumnType(index, columnType) {
@@ -100,7 +102,7 @@ export default function Form() {
             title={'Resultaat'} 
             updateFields={updateFields} 
         />
-    ], data, lastUnformattedText, addColumnsToOptionsData, updateFields);
+    ], data, lastUnformattedText, lastSource, addColumnsToOptionsData, updateFields);
 
 return (
     <>

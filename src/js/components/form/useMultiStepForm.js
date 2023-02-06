@@ -13,7 +13,7 @@ const alertSuccess = (message) => toast.success(message, {
     theme: "light",
 });
 
-export default function useMultiStepForm( steps, data, lastUnformattedText, addColumnsToOptionsData, updateFields ) {
+export default function useMultiStepForm( steps, data, lastUnformattedText, lastSource, addColumnsToOptionsData, updateFields ) {
 
     const ipcRenderer = (window).ipcRenderer;
 
@@ -37,7 +37,7 @@ export default function useMultiStepForm( steps, data, lastUnformattedText, addC
     }
 
     function next() {
-        if (isFirstStep && lastUnformattedText !== data.unformattedText) detectColumns();
+        if (isFirstStep && (lastUnformattedText !== data.unformattedText || lastSource !== data.source)) detectColumns();
 
         if (currentStepIndex === 1) formatText();
 
@@ -55,7 +55,7 @@ export default function useMultiStepForm( steps, data, lastUnformattedText, addC
     }
 
     function goTo(index) {
-        if (isFirstStep && lastUnformattedText !== data.unformattedText) detectColumns();
+        if (isFirstStep && (lastUnformattedText !== data.unformattedText || lastSource !== data.source)) detectColumns();
 
         if (index === 2) formatText();
         
