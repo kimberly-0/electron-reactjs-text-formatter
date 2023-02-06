@@ -154,6 +154,21 @@ textarea {
     min-height: 400px;
     max-height: 800px;
     border-radius: $border-radius-large;
+    transition-property: min-height;
+    transition-duration: $speed;
+    transition-timing-function: $anim;
+}
+
+@media (max-height: 800px) {
+    textarea {
+        min-height: 300px;
+    }
+}
+
+@media (max-height: 700px) {
+    textarea {
+        min-height: 200px;
+    }
 }
 
 input {
