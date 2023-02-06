@@ -1,11 +1,11 @@
 const path = require('path');
-const { app, BrowserWindow, Menu, ipcMain, MenuItem  } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain  } = require('electron');
 
 if (require('electron-squirrel-startup')) app.quit();
 
 const isMac = process.platform === 'darwin'; // Check if platform is a Mac (darwin: mac, win32: windows, linux: linux)
 
-// process.env.NODE_ENV = 'production';
+process.env.NODE_ENV = 'production';
 const isDev = process.env.NODE_ENV !== 'production'; // Check if we're in DEV mode
 
 // Auto reload window on change if in DEV mode
