@@ -1,41 +1,51 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-const Menu = () => {
+const Menu = ({ steps, currentStepIndex, goTo }) => {
 
-    const location = useLocation();
+    const pagesActive = [
+        true, 
+        currentStepIndex >= 1 ? true : false, 
+        currentStepIndex >= 2 ? true : false
+    ];
 
-    // let page_1_home = true;
-    let page_2_options_active = false;
-    let page_3_result_active = false;
+    function navigateTo(stepIndex) {
+        console.log("CLICK " + stepIndex);
 
-    if (location.pathname === "/options") {
-        page_2_options_active = true;
-    } else if (location.pathname === "/result") {
-        page_2_options_active = true;
-        page_3_result_active = true;
+        // On submit for changes? and required fields??
+
+        goTo(stepIndex);
     }
-   
-    /*
-    Change this to dynamic based on steps in the form
-        get title
-        get whether index is currentindex
-        get link
-    */
+
+    function buildMenuItems() {
+        const menuItems = [];
+
+        for (let i = 0; i < steps.length; i++) {
+
+            menuItems.push(
+                <li key={i} className={`${pagesActive[i] ? "active" : ""}`}>
+                    <Link onClick={(e) => navigateTo(i)} >
+                        {`${i+1}    ${steps[i].props.title}`}
+                    </Link>
+                </li>
+            )
+
+            if (i < steps.length - 1) {
+                menuItems.push(
+                    <div key={`${i}b`} className={`vertical-progress-line ${pagesActive[i+1] ? "active" : ""}`}></div>
+                )
+            }
+        
+        }
+
+        return menuItems;
+    }
 
 return(
     <>
         <div className="menu">
             <ul>
-                <li className="active"><Link to="/">1    Tekst invoeren</Link></li>
-
-                <div className={`vertical-progress-line ${page_2_options_active ? "active" : ""}`}></div>
-
-                <li className={`${page_2_options_active ? "active" : ""}`}><Link to="/options">2    Opties selecteren</Link></li>
-
-                <div className={`vertical-progress-line ${page_3_result_active ? "active" : ""}`}></div>
-
-                <li className={`${page_3_result_active ? "active" : ""}`}><Link to="/result">3    Resultaat</Link></li>
+                { buildMenuItems() }
             </ul>
         </div>
     </>

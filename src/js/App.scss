@@ -288,16 +288,10 @@ button:hover {
 
 /* ----- Page content | Result page ----- */
 
-#result-form button {
-    display: inline-block;
-}
-
-#result-form button:first-of-type {
+.copy-button {
     background-color: #07bc0c;
-    margin-right: 20px;
 }
 
-#result-form button:first-of-type:hover {
+.copy-button:hover {
     background-color: #029106;
 }
-
