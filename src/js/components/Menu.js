@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Menu = ({ steps, currentStepIndex, goTo }) => {
 
@@ -9,14 +9,6 @@ const Menu = ({ steps, currentStepIndex, goTo }) => {
         currentStepIndex >= 2 ? true : false
     ];
 
-    function navigateTo(stepIndex) {
-        console.log("CLICK " + stepIndex);
-
-        // On submit for changes? and required fields??
-
-        goTo(stepIndex);
-    }
-
     function buildMenuItems() {
         const menuItems = [];
 
@@ -24,7 +16,7 @@ const Menu = ({ steps, currentStepIndex, goTo }) => {
 
             menuItems.push(
                 <li key={i} className={`${pagesActive[i] ? "active" : ""}`}>
-                    <Link onClick={(e) => navigateTo(i)} >
+                    <Link onClick={(e) => goTo(i)} >
                         {`${i+1}    ${steps[i].props.title}`}
                     </Link>
                 </li>

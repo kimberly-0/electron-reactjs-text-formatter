@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Menu from '../components/Menu';
@@ -9,18 +9,6 @@ import useMultiStepForm from '../components/form/useMultiStepForm';
 import TextForm from "../components/form/Textform";
 import OptionsForm from "../components/form/Optionsform";
 import ResultForm from "../components/form/Resultform";
-
-const alertSuccess = (message) => toast.success(message, {
-    toastId: 'success1',
-    position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: false,
-    progress: undefined,
-    theme: "light",
-});
 
 const INITIAL_DATA = {
     unformattedText: "",
@@ -67,6 +55,8 @@ export default function Form() {
         // Reset column options selected values to hide full text options
         setGemeenteSelected(false);
         setSnelheidSelected(false);
+        // Update last formatted text
+        lastUnformattedText = data.unformattedText;
     }
 
     function updateColumnType(index, columnType) {
@@ -89,7 +79,7 @@ export default function Form() {
     Implement form steps and content
     */
 
-    const { steps, currentStepIndex, stepTitle, stepContent, isFirstStep, isLastStep, goTo, back, next} = useMultiStepForm([
+    const { steps, currentStepIndex, stepTitle, stepContent, isFirstStep, isLastStep, back, next, goTo, onSubmit, copy, startOver} = useMultiStepForm([
         <TextForm 
             {...data} 
             title={'Tekst invoeren'} 
@@ -110,57 +100,7 @@ export default function Form() {
             title={'Resultaat'} 
             updateFields={updateFields} 
         />
-    ]);
-
-    /*
-    Handle navigation and form submission
-    */
-
-    const ipcRenderer = (window).ipcRenderer;
-
-    function onSubmit(e) {
-        e.preventDefault();
-
-        // If unformattedText has changed, update columns and full text options
-        if (isFirstStep && lastUnformattedText !== data.unformattedText) { 
-            ipcRenderer.send('detectColumns', {data})
-            ipcRenderer.on('columnsDetected', (args) => {
-                addColumnsToOptionsData(args.columns);
-                lastUnformattedText = data.unformattedText;
-            })
-        }
-
-        // Options form -> result form
-        if (currentStepIndex === 1) { 
-            ipcRenderer.send('formatText', {data})
-            ipcRenderer.on('textFormatted', (formattedText) => {  
-                updateFields({formattedText: formattedText});
-            })
-        }
-
-        return next();
-    }
-
-    function copy() {
-        ipcRenderer.send('copy:result', data.formattedText)
-        ipcRenderer.on('copy:done', () => {
-            alertSuccess("Gekopiëerd");
-        })
-    }
-
-    function startOver() {
-        updateFields({unformattedText: ""});
-        updateFields({source: ""});
-        updateFields({columnsOptions: []});
-        updateFields({fullTextOptions: [
-            { id: 0, columnType: 'gemeente', option: 'waar', selection: 'overal'},
-            { id: 1, columnType: 'snelheid', option: 'waar', selection: 'overal'},
-            { id: 2, columnType: 'snelheid', option: 'nummers', selection: 0}
-        ]});
-        updateFields({formattedText: ""});
-
-        goTo(0);
-    }
+    ], data, lastUnformattedText, addColumnsToOptionsData, updateFields);
 
 return (
     <>
