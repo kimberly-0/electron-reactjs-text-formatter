@@ -1,22 +1,37 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import Menu from '../components/Menu';
 
 import useMultiStepForm from '../components/form/useMultiStepForm';
-import OptionsForm from "../components/form/Optionsform";
 import TextForm from "../components/form/Textform";
+import OptionsForm from "../components/form/Optionsform";
+import ResultForm from "../components/form/Resultform";
+
+const alertSuccess = (message) => toast.success(message, {
+    toastId: 'success1',
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: false,
+    progress: undefined,
+    theme: "light",
+});
 
 const INITIAL_DATA = {
     unformattedText: "",
     source: "",
-    columnsOptions: [
-        { id: 4, content: 'xxx', columnType: 'yes' }
-    ],
+    columnsOptions: [],
     fullTextOptions: [
         { id: 0, columnType: 'gemeente', option: 'waar', selection: 'overal'},
         { id: 1, columnType: 'snelheid', option: 'waar', selection: 'overal'},
         { id: 2, columnType: 'snelheid', option: 'nummers', selection: 0}
-    ]
+    ],
+    formattedText: ""
 }
 
 let lastUnformattedText = "";
@@ -74,7 +89,7 @@ export default function Form() {
     Implement form steps and content
     */
 
-    const { steps, currentStepIndex, stepTitle, stepContent, isFirstStep, isLastStep, back, next} = useMultiStepForm([
+    const { steps, currentStepIndex, stepTitle, stepContent, isFirstStep, isLastStep, goTo, back, next} = useMultiStepForm([
         <TextForm 
             {...data} 
             title={'Tekst invoeren'} 
@@ -89,6 +104,11 @@ export default function Form() {
             gemeenteSelected={gemeenteSelected} 
             setGemeenteSelected={setGemeenteSelected} 
             setSnelheidSelected={setSnelheidSelected} 
+        />,
+        <ResultForm 
+            {...data} 
+            title={'Resultaat'} 
+            updateFields={updateFields} 
         />
     ]);
 
@@ -97,57 +117,85 @@ export default function Form() {
     */
 
     const ipcRenderer = (window).ipcRenderer;
-    const navigate = useNavigate(); // TO DELETE !!!!!!!!!!!!!
 
     function onSubmit(e) {
         e.preventDefault();
 
-        if (!isLastStep) {
-
-            // If unformattedText has changed, update columns and full text options
-            if (isFirstStep && lastUnformattedText !== data.unformattedText) { 
-                ipcRenderer.send('detectColumns', {data})
-                ipcRenderer.on('columnsDetected', (args) => {
-                    addColumnsToOptionsData(args.columns);
-                    lastUnformattedText = data.unformattedText;
-                })
-            }
-
-            return next();
-
-        } else {
-
-            // Send text to main process
-            ipcRenderer.send('formatText', {data})
-
-            // Get formatted text from main process 
-            // + navigate to Results page
-            ipcRenderer.on('textFormatted', (formattedText) => {                
-                navigate("../result", {
-                    state: {
-                        formattedText: formattedText // MAKE PART OF MULTI STEP FORM !!!!!!!!!!!!!
-                    }
-                })
+        // If unformattedText has changed, update columns and full text options
+        if (isFirstStep && lastUnformattedText !== data.unformattedText) { 
+            ipcRenderer.send('detectColumns', {data})
+            ipcRenderer.on('columnsDetected', (args) => {
+                addColumnsToOptionsData(args.columns);
+                lastUnformattedText = data.unformattedText;
             })
+        }
 
-            console.log("Succesful submit"); // REPLACE WITH SENCIND DATA TO MAIN PROCESS !!!!!
-        } 
+        // Options form -> result form
+        if (currentStepIndex === 1) { 
+            ipcRenderer.send('formatText', {data})
+            ipcRenderer.on('textFormatted', (formattedText) => {  
+                updateFields({formattedText: formattedText});
+            })
+        }
+
+        return next();
+    }
+
+    function copy() {
+        ipcRenderer.send('copy:result', data.formattedText)
+        ipcRenderer.on('copy:done', () => {
+            alertSuccess("Gekopiëerd");
+        })
+    }
+
+    function startOver() {
+        updateFields({unformattedText: ""});
+        updateFields({source: ""});
+        updateFields({columnsOptions: []});
+        updateFields({fullTextOptions: [
+            { id: 0, columnType: 'gemeente', option: 'waar', selection: 'overal'},
+            { id: 1, columnType: 'snelheid', option: 'waar', selection: 'overal'},
+            { id: 2, columnType: 'snelheid', option: 'nummers', selection: 0}
+        ]});
+        updateFields({formattedText: ""});
+
+        goTo(0);
     }
 
 return (
-    <div className="form-page page">
+    <>
+    
+        <Menu 
+            steps={steps}
+            currentStepIndex={currentStepIndex} 
+            goTo={goTo} 
+        />
 
-        <h1 className="header-title">{stepTitle}</h1>
+        <div className="form-page page">
 
-        <form id="text-form" onSubmit={onSubmit}>
+            <h1 className="header-title">{stepTitle}</h1>
 
-            {stepContent}
+            <form id="text-form" onSubmit={onSubmit}>
 
-            <div className="buttonsContainer">
-                {!isFirstStep && (<button type="button" onClick={back}>Terug</button>)}
-                <button type="submit">{isLastStep ? "Verwerk" : "Volgende" }</button>
-            </div>
-        </form>
+                {stepContent}
 
-    </div>
+                <div className="buttonsContainer">
+
+                    {!isFirstStep && (<button type="button" onClick={back}>Terug</button>)}
+
+                    {isFirstStep && <button type="submit">Volgende</button>}
+
+                    {currentStepIndex === 1 && <button type="submit">Verwerk</button>}
+
+                    {isLastStep && <button type="button" onClick={startOver}>Begin opnieuw</button>}
+
+                    {isLastStep && <button type="button" onClick={copy} className="copy-button">Kopiëer</button>}
+
+                </div>
+            </form>
+
+            <ToastContainer />
+
+        </div>
+    </>
 )}

@@ -149,7 +149,7 @@ function formatText(text, source, columnOptions, ftOptionsGemeenteWaar, ftOption
         // Add line to formatted text
         formattedText.push(formattedLine);
     }
-
+    
     // Send formattedText to renderer
     let formattedTextMerged = formattedText.join('');
     mainWindow.webContents.send('textFormatted', formattedTextMerged);
