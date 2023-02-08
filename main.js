@@ -5,7 +5,7 @@ if (require('electron-squirrel-startup')) app.quit();
 
 const isMac = process.platform === 'darwin'; // Check if platform is a Mac (darwin: mac, win32: windows, linux: linux)
 
-process.env.NODE_ENV = 'production';
+// process.env.NODE_ENV = 'production';
 const isDev = process.env.NODE_ENV !== 'production'; // Check if we're in DEV mode
 
 // Auto reload window on change if in DEV mode
@@ -46,6 +46,25 @@ function capitalizeFirstLetterOfEachWord(line, splitChar) {
     return arr.join(splitChar);
 }
 
+// Lowercase certain parts of the name according to NL standards
+// 'van', 'den', 'de', 'v.d.', 'v. d.', 'v d', 'v', 'd'
+function lowercaseNamesToFormattingNL(line) {
+    const wordsToLowercase = [" Van ", " Den ", " De ", " V.d. ", " V. D. "];
+    for (let s = 0; s < wordsToLowercase.length; s++) {
+        if (line.includes(wordsToLowercase[s])) {
+            const startIndex = line.indexOf(wordsToLowercase[s]);
+            const endIndex = startIndex + wordsToLowercase[s].length;
+
+            const stringBeforeWord = line.substring(0, startIndex);
+            const lowercasedWord = line.substring(startIndex, endIndex).toLowerCase();
+            const stringAfterWord = line.substring(endIndex, line.length);
+
+            line =  stringBeforeWord + lowercasedWord + stringAfterWord;
+        }
+    }
+    return line;
+}
+
 /*
 ---- FUNCTIONALITY ----
 */
@@ -68,11 +87,13 @@ function detectColumns(text, source) {
 ipcMain.on('formatText', (e, args) => {
     const columnsOptions = args.data.columnsOptions.map(value => value.columnType);
 
+    let fullTextOptionsNaamLand = "";
     let fullTextOptionsGemeenteWaar = "";
     let fullTextOptionsSnelheidWaar = "";
     let fullTextOptionsSnelheidNummers = 0;
 
     args.data.fullTextOptions.forEach(function (item, index) {
+        if (item.columnType === 'naam' && item.option === 'land') fullTextOptionsNaamLand = item.selection;
         if (item.columnType === 'gemeente' && item.option === 'waar') fullTextOptionsGemeenteWaar = item.selection;
         if (item.columnType === 'snelheid') {
             if (item.option === 'waar') fullTextOptionsSnelheidWaar = item.selection;
@@ -80,11 +101,11 @@ ipcMain.on('formatText', (e, args) => {
         }
     });
 
-    formatText(args.data.unformattedText, args.data.source, columnsOptions, fullTextOptionsGemeenteWaar, fullTextOptionsSnelheidWaar, fullTextOptionsSnelheidNummers); 
+    formatText(args.data.unformattedText, args.data.source, columnsOptions, fullTextOptionsNaamLand, fullTextOptionsGemeenteWaar, fullTextOptionsSnelheidWaar, fullTextOptionsSnelheidNummers); 
 });
 
 // Format text based on options selected
-function formatText(text, source, columnOptions, ftOptionsGemeenteWaar, ftOptionsSnelheidWaar, ftOptionsSnelheidNummers) {
+function formatText(text, source, columnOptions, ftOptionsNaamLand, ftOptionsGemeenteWaar, ftOptionsSnelheidWaar, ftOptionsSnelheidNummers) {
     const formattedText = [];
 
     // Iterate through the lines in the text and format each line
@@ -138,6 +159,12 @@ function formatText(text, source, columnOptions, ftOptionsGemeenteWaar, ftOption
                 formattedLine = capitalizeFirstLetterOfEachWord(formattedLine, capitalizeAfterSymbols[s]);
             }
         }
+
+        // If name formatting for NL is selected, change following to small letters: 
+        // 'van', 'den', 'de', 'v.d.', 'v. d.', 'v d', 'v', 'd'
+        // if (ftOptionsNaamLand === "NL") {
+        //     formattedLine = lowercaseNamesToFormattingNL(formattedLine);
+        // } 
 
         // If this is the last line, end with '.', otherwise end line with ';'
         if (l == lines.length - 1) {

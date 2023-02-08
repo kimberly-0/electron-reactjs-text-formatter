@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function OptionsForm({ columnsOptions, fullTextOptions, updateColumnType, updateFullTextOptions, gemeenteSelected, snelheidSelected }) {
+export default function OptionsForm({ columnsOptions, fullTextOptions, updateColumnType, updateFullTextOptions, naamSelected, gemeenteSelected, snelheidSelected }) {
     return (
         <div className="options-form__container">
 
@@ -30,13 +30,26 @@ export default function OptionsForm({ columnsOptions, fullTextOptions, updateCol
 
             {(gemeenteSelected || snelheidSelected) && <div className="options-form__container__full-text-options">
 
+                {/* {naamSelected && <div className="full-text-option-container full-text-options__naam">
+                    <h4 className="options-form__full-text-options__subtitle">Naam</h4>
+                    <label className="full-text-options__naam__label">Land:</label>
+                    <select
+                        className="full-text-options__naam__selectbox"
+                        value={fullTextOptions[0].selection}
+                        onChange={(e) => updateFullTextOptions(0, e.target.value)}
+                    >
+                        <option value={"BE"}>BE</option>
+                        <option value={"NL"}>NL</option>
+                    </select>
+                </div>} */}
+
                 {gemeenteSelected && <div className="full-text-option-container full-text-options__gemeente">
                     <h4 className="options-form__full-text-options__subtitle">Gemeente</h4>
                     <label className="full-text-options__gemeente__label">Waar:</label>
                     <select
                         className="full-text-options__gemeente__selectbox"
-                        value={fullTextOptions[0].selection}
-                        onChange={(e) => updateFullTextOptions(0, e.target.value)}
+                        value={fullTextOptions[1].selection}
+                        onChange={(e) => updateFullTextOptions(1, e.target.value)}
                     >
                         <option value={"overal"}>overal</option>
                         <option value={"eerste"}>alleen eerste</option>
@@ -49,15 +62,15 @@ export default function OptionsForm({ columnsOptions, fullTextOptions, updateCol
                     <label className="full-text-options__snelheid__label">Waar:</label>
                     <select
                         className="full-text-options__snelheid__selectbox"
-                        value={fullTextOptions[1].selection}
-                        onChange={(e) => updateFullTextOptions(1, e.target.value)}
+                        value={fullTextOptions[2].selection}
+                        onChange={(e) => updateFullTextOptions(2, e.target.value)}
                     >
                         <option value={"overal"}>overal</option>
                         <option value={"eerste"}>alleen eerste</option>
                     </select>
 
                     <label className="full-text-options__snelheid-digits__label">Cijfers achter de komma:</label>
-                    <input className="full-text-options__snelheid-digits__input" type="number" name="snelheid-digits" min="0" max="4" value={fullTextOptions[2].selection} onChange={(e) => updateFullTextOptions(2, e.target.value)}></input>
+                    <input className="full-text-options__snelheid-digits__input" type="number" name="snelheid-digits" min="0" max="4" value={fullTextOptions[3].selection} onChange={(e) => updateFullTextOptions(3, e.target.value)}></input>
                 </div>}
 
             </div>}

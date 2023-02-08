@@ -15,9 +15,10 @@ const INITIAL_DATA = {
     source: "",
     columnsOptions: [],
     fullTextOptions: [
-        { id: 0, columnType: 'gemeente', option: 'waar', selection: 'overal'},
-        { id: 1, columnType: 'snelheid', option: 'waar', selection: 'overal'},
-        { id: 2, columnType: 'snelheid', option: 'nummers', selection: 0}
+        { id: 0, columnType: 'naam', option: 'land', selection: 'BE'},
+        { id: 1, columnType: 'gemeente', option: 'waar', selection: 'overal'},
+        { id: 2, columnType: 'snelheid', option: 'waar', selection: 'overal'},
+        { id: 3, columnType: 'snelheid', option: 'nummers', selection: 0}
     ],
     formattedText: ""
 }
@@ -33,6 +34,7 @@ export default function Form() {
 
     const [data, setData] = useState(INITIAL_DATA);
 
+    const [naamSelected, setNaamSelected] = useState(false);
     const [gemeenteSelected, setGemeenteSelected] = useState(false);
     const [snelheidSelected, setSnelheidSelected] = useState(false);
 
@@ -50,15 +52,17 @@ export default function Form() {
         // Add detected columns to data to dynamically show in form
         updateFields({columnsOptions: newColumns});
         // Reset full text options data to default
-        updateFullTextOptions(0, 'overal');
+        updateFullTextOptions(0, 'BE');
         updateFullTextOptions(1, 'overal');
-        updateFullTextOptions(2, 0);
+        updateFullTextOptions(2, 'overal');
+        updateFullTextOptions(3, 0);
         // Reset column options selected values to hide full text options
+        setNaamSelected(false);
         setGemeenteSelected(false);
         setSnelheidSelected(false);
         // Update last formatted text
         lastUnformattedText = data.unformattedText;
-        lastsource = data.source;
+        lastSource = data.source;
     }
 
     function updateColumnType(index, columnType) {
@@ -67,6 +71,7 @@ export default function Form() {
         updateFields({columnsOptions: newColumnsOptions});
 
         // Show or hide additional full text options based on column options selected
+        setNaamSelected(data.columnsOptions.filter(e => e.columnType === 'naam').length > 0 ? true : false);
         setGemeenteSelected(data.columnsOptions.filter(e => e.columnType === 'gemeente').length > 0 ? true : false);
         setSnelheidSelected(data.columnsOptions.filter(e => e.columnType === 'snelheid').length > 0 ? true : false);
     }
@@ -92,8 +97,10 @@ export default function Form() {
             title={'Opties selecteren'} 
             updateColumnType={updateColumnType}
             updateFullTextOptions={updateFullTextOptions}
-            snelheidSelected={snelheidSelected} 
             gemeenteSelected={gemeenteSelected} 
+            naamSelected={naamSelected} 
+            snelheidSelected={snelheidSelected} 
+            setNaamSelected={setNaamSelected} 
             setGemeenteSelected={setGemeenteSelected} 
             setSnelheidSelected={setSnelheidSelected} 
         />,

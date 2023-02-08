@@ -74,9 +74,10 @@ export default function useMultiStepForm( steps, data, lastUnformattedText, last
         updateFields({source: ""});
         updateFields({columnsOptions: []});
         updateFields({fullTextOptions: [
-            { id: 0, columnType: 'gemeente', option: 'waar', selection: 'overal'},
-            { id: 1, columnType: 'snelheid', option: 'waar', selection: 'overal'},
-            { id: 2, columnType: 'snelheid', option: 'nummers', selection: 0}
+            { id: 0, columnType: 'naam', option: 'land', selection: 'BE'},
+            { id: 1, columnType: 'gemeente', option: 'waar', selection: 'overal'},
+            { id: 2, columnType: 'snelheid', option: 'waar', selection: 'overal'},
+            { id: 3, columnType: 'snelheid', option: 'nummers', selection: 0}
         ]});
         updateFields({formattedText: ""});
 
