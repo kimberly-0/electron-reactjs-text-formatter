@@ -2,6 +2,19 @@
 
 This desktop app is built with **Electron** and **React** and was created to solve a real-world business problem. It can format large texts within seconds, which was previously achieved by manually typing every word. The app has enabled processes to be more efficient and less time-consuming.
 
+## Preview
+
+![app preview](https://github.com/kidijkmans/electron-reactjs-text-formatter/blob/master/preview/preview.gif)
+
+# Steps
+
+<img src="https://github.com/kidijkmans/electron-reactjs-text-formatter/blob/master/preview/preview-step-1.png" width="300">
+
+<img src="https://github.com/kidijkmans/electron-reactjs-text-formatter/blob/master/preview/preview-step-2.png" width="300">
+
+<img src="https://github.com/kidijkmans/electron-reactjs-text-formatter/blob/master/preview/preview-step-3.png" width="300">
+
+<img src="https://github.com/kidijkmans/electron-reactjs-text-formatter/blob/master/preview/preview-step-4.png" width="300">
 
 ## Get started
 
