@@ -6,15 +6,15 @@ This desktop app is built with **Electron** and **React** and was created to sol
 
 ![app preview](https://github.com/kidijkmans/electron-reactjs-text-formatter/blob/master/preview/preview.gif)
 
-# Steps
+### Steps
 
-<img src="https://github.com/kidijkmans/electron-reactjs-text-formatter/blob/master/preview/preview-step-1.png" width="300">
+<img src="https://github.com/kidijkmans/electron-reactjs-text-formatter/blob/master/preview/preview-step-1.png" width="400" style="display:inline-block;">
 
-<img src="https://github.com/kidijkmans/electron-reactjs-text-formatter/blob/master/preview/preview-step-2.png" width="300">
+<img src="https://github.com/kidijkmans/electron-reactjs-text-formatter/blob/master/preview/preview-step-2.png" width="400" style="display:inline-block;">
 
-<img src="https://github.com/kidijkmans/electron-reactjs-text-formatter/blob/master/preview/preview-step-3.png" width="300">
+<img src="https://github.com/kidijkmans/electron-reactjs-text-formatter/blob/master/preview/preview-step-3.png" width="400" style="display:inline-block;">
 
-<img src="https://github.com/kidijkmans/electron-reactjs-text-formatter/blob/master/preview/preview-step-4.png" width="300">
+<img src="https://github.com/kidijkmans/electron-reactjs-text-formatter/blob/master/preview/preview-step-4.png" width="400" style="display:inline-block;">
 
 ## Get started
 
