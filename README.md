@@ -1,6 +1,6 @@
 # Text formatter
 
-This desktop app is built with **Electron** and **React** and was created to solve a real-world business problem. It can format large texts within seconds, which was previously achieved by manually typing every word. The app has enabled processes to be more efficient and less time-consuming.
+This desktop app is built with **Electron** and **React** and was created to solve a real-world problem. It can format large texts within seconds, which was previously achieved by manually typing every word. The app has enabled processes to be more efficient and less time-consuming.
 
 ## Preview
 
