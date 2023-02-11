@@ -51,18 +51,23 @@ export default function Form() {
         }
         // Add detected columns to data to dynamically show in form
         updateFields({columnsOptions: newColumns});
-        // Reset full text options data to default
+
+        // Reset full text options fields
+        resetFullTextOptions();
+
+        // Update last formatted text
+        lastUnformattedText = data.unformattedText;
+        lastSource = data.source;
+    }
+
+    function resetFullTextOptions() {
         updateFullTextOptions(0, 'BE');
         updateFullTextOptions(1, 'overal');
         updateFullTextOptions(2, 'overal');
         updateFullTextOptions(3, 0);
-        // Reset column options selected values to hide full text options
         setNaamSelected(false);
         setGemeenteSelected(false);
         setSnelheidSelected(false);
-        // Update last formatted text
-        lastUnformattedText = data.unformattedText;
-        lastSource = data.source;
     }
 
     function updateColumnType(index, columnType) {
