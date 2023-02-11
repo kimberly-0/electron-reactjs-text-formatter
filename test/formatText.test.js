@@ -7,24 +7,16 @@ Test error handling
 */
 
 test('throws error if no text is provided', () => {
-    expect(() => formatText()).toThrow('No text provided');
-})
-
-test('throws error if no source is provided', () => {
-    expect(() => formatText('text')).toThrow('No source provided');
-})
-
-test('throws error if an invalid source is provided', () => {
-    expect(() => formatText('text', 'invalid source')).toThrow('Invalid source provided');
+    expect(() => formatText()).toThrow('Geen tekst voorzien');
 })
 
 test('throws error if no column options are provided', () => {
-    expect(() => formatText('text', 'kbdb')).toThrow('No column options provided');
+    expect(() => formatText('text', 'kbdb')).toThrow('Geen kolom opties voorzien');
 })
 
 test('throws error if column options are empty', () => {
     const columnOptions = [];
-    expect(() => formatText('text', 'kbdb', columnOptions)).toThrow('No column options provided');
+    expect(() => formatText('text', 'kbdb', columnOptions)).toThrow('Geen kolom opties voorzien');
 })
 
 /*

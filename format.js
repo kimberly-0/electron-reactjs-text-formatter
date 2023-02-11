@@ -1,10 +1,8 @@
 // Format text based on options selected
 function formatText(text, source, columnOptions, ftOptionsNaamLand, ftOptionsGemeenteWaar, ftOptionsSnelheidWaar, ftOptionsSnelheidNummers) {
 
-    if (text === undefined || text === null || text.length <= 0 || text === "") throw new Error('No text provided');
-    if (source === undefined || source === "") throw new Error('No source provided');
-    if (source !== 'kbdb' && source !== 'compuclub') throw new Error('Invalid source provided')
-    if (columnOptions === undefined || columnOptions.length <= 0) throw new Error('No column options provided');
+    if (text === undefined || text === null || text.length <= 0 || text === "") throw new Error('Geen tekst voorzien'); // No text provided
+    if (columnOptions === undefined || columnOptions.length <= 0) throw new Error('Geen kolom opties voorzien'); // No column options provided
 
     const formattedText = [];
 
@@ -79,7 +77,6 @@ function formatText(text, source, columnOptions, ftOptionsNaamLand, ftOptionsGem
     
     // Send formattedText to renderer
     let formattedTextMerged = formattedText.join('');
-    // mainWindow.webContents.send('textFormatted', formattedTextMerged);
 
     return formattedTextMerged;
 }

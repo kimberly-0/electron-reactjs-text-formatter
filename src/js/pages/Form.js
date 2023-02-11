@@ -86,7 +86,7 @@ export default function Form() {
     Implement form steps and content
     */
 
-    const { steps, currentStepIndex, stepTitle, stepContent, isFirstStep, isLastStep, back, next, goTo, onSubmit, copy, startOver} = useMultiStepForm([
+    const { steps, currentStepIndex, stepTitle, stepContent, isFirstStep, isLastStep, onSubmit, next, back, goTo, formatText, copy, startOver } = useMultiStepForm([
         <TextForm 
             {...data} 
             title={'Tekst invoeren'} 
@@ -134,7 +134,7 @@ return (
 
                     {isFirstStep && <button type="submit">Volgende</button>}
 
-                    {currentStepIndex === 1 && <button type="submit">Verwerk</button>}
+                    {currentStepIndex === 1 && <button type="button" onClick={formatText}>Verwerk</button>}
 
                     {isLastStep && <button type="button" onClick={startOver}>Begin opnieuw</button>}
 
@@ -144,7 +144,6 @@ return (
             </form>
 
             <ToastContainer />
-
         </div>
     </>
 )}

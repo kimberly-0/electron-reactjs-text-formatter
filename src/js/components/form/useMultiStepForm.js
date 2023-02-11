@@ -13,6 +13,18 @@ const alertSuccess = (message) => toast.success(message, {
     theme: "light",
 });
 
+const alertError = (message) => toast.error(message, {
+    toastId: 'error1',
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: false,
+    progress: undefined,
+    theme: "light",
+});
+
 export default function useMultiStepForm( steps, data, lastUnformattedText, lastSource, addColumnsToOptionsData, updateFields ) {
 
     const ipcRenderer = (window).ipcRenderer;
@@ -22,24 +34,16 @@ export default function useMultiStepForm( steps, data, lastUnformattedText, last
     let isFirstStep = currentStepIndex === 0;
     let isLastStep = currentStepIndex === steps.length - 1;
 
-    function detectColumns() {
-        ipcRenderer.send('detectColumns', {data})
-        ipcRenderer.on('columnsDetected', (args) => {
-            addColumnsToOptionsData(args.columns);
-        })
-    }
-
-    function formatText() {
-        ipcRenderer.send('formatText', {data})
-        ipcRenderer.on('textFormatted', (formattedText) => {  
-            updateFields({formattedText: formattedText});
-        })
+    function onSubmit(e) {
+        e.preventDefault();
+        return next();
     }
 
     function next() {
-        if (isFirstStep && (lastUnformattedText !== data.unformattedText || lastSource !== data.source)) detectColumns();
 
-        if (currentStepIndex === 1) formatText();
+        if (isFirstStep && (lastUnformattedText !== data.unformattedText || lastSource !== data.source)) {
+            detectColumns();
+        }
 
         setCurrentStepIndex(i => {
             if (i >= steps.length - 1) return i;
@@ -55,11 +59,35 @@ export default function useMultiStepForm( steps, data, lastUnformattedText, last
     }
 
     function goTo(index) {
-        if (isFirstStep && (lastUnformattedText !== data.unformattedText || lastSource !== data.source)) detectColumns();
+        if (isFirstStep && (lastUnformattedText !== data.unformattedText || lastSource !== data.source)) {
+            detectColumns();
+        }
 
-        if (index === 2) formatText();
+        if (index === 2) {
+           return formatText();
+        }
         
         setCurrentStepIndex(index);
+    }
+
+    function detectColumns() {
+        ipcRenderer.send('detectColumns', {data})
+        ipcRenderer.on('columnsDetected', (args) => {
+            addColumnsToOptionsData(args.columns);
+        })
+    }
+
+    function formatText() {
+        ipcRenderer.send('formatText', {data})
+
+        ipcRenderer.on('displayError', (errorMessage) => {
+            alertError(errorMessage);
+        })
+
+        ipcRenderer.on('textFormatted', (formattedText) => {  
+            updateFields({formattedText: formattedText});
+            return next();
+        })
     }
 
     function copy() {
@@ -84,11 +112,6 @@ export default function useMultiStepForm( steps, data, lastUnformattedText, last
         goTo(0);
     }
 
-    function onSubmit(e) {
-        e.preventDefault();
-        return next();
-    }
-
     return {
         currentStepIndex,
         stepTitle: steps[currentStepIndex].props.title,
@@ -96,10 +119,11 @@ export default function useMultiStepForm( steps, data, lastUnformattedText, last
         steps,
         isFirstStep,
         isLastStep,
+        onSubmit,
         next, 
         back,
         goTo,
-        onSubmit,
+        formatText,
         copy,
         startOver
     }

@@ -53,9 +53,18 @@ ipcMain.on('formatText', (e, args) => {
         }
     });
 
-   const formattedText = formatText(args.data.unformattedText, args.data.source, columnsOptions, fullTextOptionsNaamLand, fullTextOptionsGemeenteWaar, fullTextOptionsSnelheidWaar, fullTextOptionsSnelheidNummers); 
+   let formattedText = ""
 
-    mainWindow.webContents.send('textFormatted', formattedText);
+   try {
+        formattedText = formatText(args.data.unformattedText, args.data.source, columnsOptions, fullTextOptionsNaamLand, fullTextOptionsGemeenteWaar, fullTextOptionsSnelheidWaar, fullTextOptionsSnelheidNummers);
+
+        // formattedText = formatText(args.data.unformattedText, args.data.source);
+
+        mainWindow.webContents.send('textFormatted', formattedText);
+   } catch (e) {
+        mainWindow.webContents.send('displayError', e.message);
+   }
+
 });
 
 // Get result form input from Result page
