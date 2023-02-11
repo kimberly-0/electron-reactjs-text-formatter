@@ -40,11 +40,7 @@ export default function useMultiStepForm( steps, data, lastUnformattedText, last
     }
 
     function next() {
-
-        if (isFirstStep && (lastUnformattedText !== data.unformattedText || lastSource !== data.source)) {
-            detectColumns();
-        }
-
+        detectColumns();
         setCurrentStepIndex(i => {
             if (i >= steps.length - 1) return i;
             return i + 1
@@ -52,6 +48,7 @@ export default function useMultiStepForm( steps, data, lastUnformattedText, last
     }
 
     function back() {
+        detectColumns();
         setCurrentStepIndex(i => {
             if (i <= 0) return i;
             return i - 1
@@ -59,22 +56,20 @@ export default function useMultiStepForm( steps, data, lastUnformattedText, last
     }
 
     function goTo(index) {
-        if (isFirstStep && (lastUnformattedText !== data.unformattedText || lastSource !== data.source)) {
-            detectColumns();
-        }
-
+        detectColumns();
         if (index === 2) {
            return formatText();
         }
-        
         setCurrentStepIndex(index);
     }
 
     function detectColumns() {
-        ipcRenderer.send('detectColumns', {data})
-        ipcRenderer.on('columnsDetected', (args) => {
-            addColumnsToOptionsData(args.columns);
-        })
+        if (lastUnformattedText !== data.unformattedText || lastSource !== data.source) {     
+            ipcRenderer.send('detectColumns', {data})
+            ipcRenderer.on('columnsDetected', (args) => {
+                addColumnsToOptionsData(args.columns);
+            })
+        }
     }
 
     function formatText() {
@@ -108,6 +103,9 @@ export default function useMultiStepForm( steps, data, lastUnformattedText, last
             { id: 3, columnType: 'snelheid', option: 'nummers', selection: 0}
         ]});
         updateFields({formattedText: ""});
+
+        lastUnformattedText = "";
+        lastSource = "";
 
         goTo(0);
     }
