@@ -49,8 +49,7 @@ function formatText(text, source, columnOptions, ftOptionsNaamLand, ftOptionsGem
         // Merge columns into one line
         let formattedLine = formattedLineParts.join(' ').trim();
 
-        // If source is KBDB, change from caps to small letters with first letter cap
-        if (source == "kbdb") {
+        if (!containsLowercaseExceptM(formattedLine)) {
             formattedLine = formattedLine.toLowerCase();
             const capitalizeAfterSymbols = [" ", "-", "(", "&", "/"];
             for (let s = 0; s < capitalizeAfterSymbols.length; s++) {
@@ -125,6 +124,10 @@ function splitLineIntoColumns(line, source) {
     }
 
     return columns;
+}
+
+function containsLowercaseExceptM(str) {
+  return /[a-l|n-z]/.test(str);
 }
 
 // Capitalize first letter of each word in a line, except for 'm', 'et', 'en'
