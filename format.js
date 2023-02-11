@@ -1,8 +1,11 @@
-// Format text based on options selected
-function formatText(text, source, columnOptions, ftOptionsNaamLand, ftOptionsGemeenteWaar, ftOptionsSnelheidWaar, ftOptionsSnelheidNummers) {
+function formatText(text, columnOptions, ftOptionsNaamLand, ftOptionsGemeenteWaar, ftOptionsSnelheidWaar, ftOptionsSnelheidNummers) {
 
-    if (text === undefined || text === null || text.length <= 0 || text === "") throw new Error('Geen tekst voorzien'); // No text provided
-    if (columnOptions === undefined || columnOptions.length <= 0) throw new Error('Geen kolom opties voorzien'); // No column options provided
+    if (text === undefined || text === null || text.length <= 0 || text === "") {
+        throw new Error('Geen tekst voorzien'); // No text provided
+    }
+    if (columnOptions === undefined || columnOptions.length <= 0) {
+        throw new Error('Geen kolom opties voorzien'); // No column options provided
+    }
 
     const formattedText = [];
 
@@ -11,7 +14,7 @@ function formatText(text, source, columnOptions, ftOptionsNaamLand, ftOptionsGem
 
     for (let l = 0; l < lines.length; l++) {
 
-        const columns = splitLineIntoColumns(lines[l], source);
+        const columns = splitLineIntoColumns(lines[l]);
 
         // Remove unnecessary columns from Line and columnOptions
         const newColumnOptions = [];
@@ -103,24 +106,17 @@ function formatColumn(columnValue, currColumnOption, numOfDigitsAfterDecimalPoin
     return columnValue;
 }
 
-// Split text into lines (where there's an enter)
 function splitTextIntoLines(text) {
     return text.split(/\r?\n/);
 }
 
-// Split line into columns (where there's two or more spaces OR tabs)
-function splitLineIntoColumns(line, source) {
+function splitLineIntoColumns(line) {
     let columns = [];
 
-    if (source === "compuclub") {
-        columns = line.trim().split(/\s{2,}/); // split on multiple spaces
-    } else {
-        columns = line.trim().split(/[\t]/gm); // split on tab
-    }
+    columns = line.trim().split(/[\t]/gm); // split on tab
 
-    // If result is only one column (split into columns did not work), try the other split rule
     if (columns.length <= 1) {
-        columns = (source === "compuclub") ? line.trim().split(/[\t]/gm) : line.trim().split(/\s{2,}/);
+        columns = line.trim().split(/\s{2,}/); // split on multiple spaces
     }
 
     return columns;

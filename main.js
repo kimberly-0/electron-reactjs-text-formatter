@@ -27,12 +27,12 @@ ipcMain.on('detectColumns', (e, args) => {
 });
 
 // Detect existing columns of first line
-function detectColumns(text, source) {
+function detectColumns(text) {
     const lines = splitTextIntoLines(text);
-    const columns = splitLineIntoColumns(lines[0], source);
+    const columns = splitLineIntoColumns(lines[0]);
 
     // Send columns to renderer -> to select an option for each column
-    mainWindow.webContents.send('columnsDetected', {text, source, columns});
+    mainWindow.webContents.send('columnsDetected', {text, columns});
 }
 
 // Get options form input from Options page
@@ -56,9 +56,7 @@ ipcMain.on('formatText', (e, args) => {
    let formattedText = ""
 
    try {
-        formattedText = formatText(args.data.unformattedText, args.data.source, columnsOptions, fullTextOptionsNaamLand, fullTextOptionsGemeenteWaar, fullTextOptionsSnelheidWaar, fullTextOptionsSnelheidNummers);
-
-        // formattedText = formatText(args.data.unformattedText, args.data.source);
+        formattedText = formatText(args.data.unformattedText, columnsOptions, fullTextOptionsNaamLand, fullTextOptionsGemeenteWaar, fullTextOptionsSnelheidWaar, fullTextOptionsSnelheidNummers);
 
         mainWindow.webContents.send('textFormatted', formattedText);
    } catch (e) {
