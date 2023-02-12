@@ -53,11 +53,8 @@ ipcMain.on('formatText', (e, args) => {
         }
     });
 
-   let formattedText = ""
-
    try {
-        formattedText = formatText(args.data.unformattedText, columnsOptions, fullTextOptionsNaamLand, fullTextOptionsGemeenteWaar, fullTextOptionsSnelheidWaar, fullTextOptionsSnelheidNummers);
-
+        const formattedText = formatText(args.data.unformattedText, columnsOptions, fullTextOptionsGemeenteWaar, fullTextOptionsSnelheidWaar, fullTextOptionsSnelheidNummers);
         mainWindow.webContents.send('textFormatted', formattedText);
    } catch (e) {
         mainWindow.webContents.send('displayError', e.message);
