@@ -1,7 +1,7 @@
 const { styleSnelheid } = require('../format');
 
-test('styleSnelheid without params', () => {
-    expect(styleSnelheid()).toEqual('');  // ???????????
+test('styleSnelheid without params returns empty string', () => {
+    expect(styleSnelheid()).toEqual('');
 })
 
 test('style empty Snelheid column with no param for digits after decimal point', () => {
