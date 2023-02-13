@@ -10,6 +10,14 @@ test('throws error if no text is provided', () => {
     expect(() => formatText()).toThrow('Geen tekst voorzien');
 })
 
+test('throws error if empty string is provided', () => {
+    expect(() => formatText('')).toThrow('Geen tekst voorzien');
+})
+
+test('throws error if string with space is provided', () => {
+    expect(() => formatText(' ')).toThrow('Geen tekst voorzien');
+})
+
 test('throws error if no column options are provided', () => {
     expect(() => formatText('text')).toThrow('Geen kolom opties voorzien');
 })
