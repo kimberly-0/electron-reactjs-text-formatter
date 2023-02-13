@@ -6,22 +6,27 @@ const resultCompuclub = ["1", "Name Surname", "City", "1862", "49/25", "2-850719
 const textLineKbdb = "1	1	302691-51	NAME SURNAME	CITY	492337	1 - 8/10	BE-19-2132563	1 - 13:29:17	1315.4126	0.0049";
 const resultKbdb = ["1", "1", "302691-51", "NAME SURNAME", "CITY", "492337", "1 - 8/10", "BE-19-2132563", "1 - 13:29:17", "1315.4126", "0.0049"];
 
-test('returns Compuclub text line with source Compuclub (split up with spaces) as an array of columns', () => {
-    expect(splitLineIntoColumns(textLineCompuclub, 'compuclub')).toHaveLength(12)
-    expect(splitLineIntoColumns(textLineCompuclub, 'compuclub')).toStrictEqual(resultCompuclub);
+test('returns Compuclub text line (split up with spaces) as an array of columns', () => {
+    expect(splitLineIntoColumns(textLineCompuclub)).toHaveLength(12)
+    expect(splitLineIntoColumns(textLineCompuclub)).toStrictEqual(resultCompuclub);
 })
 
-test('returns KBDB text line with source KBDB (split up with tab) as an array of columns', () => {
-    expect(splitLineIntoColumns(textLineKbdb, 'kbdb')).toHaveLength(11)
-    expect(splitLineIntoColumns(textLineKbdb, 'kbdb')).toStrictEqual(resultKbdb);
+test('returns KBDB text line (split up with tab) as an array of columns', () => {
+    expect(splitLineIntoColumns(textLineKbdb)).toHaveLength(11)
+    expect(splitLineIntoColumns(textLineKbdb)).toStrictEqual(resultKbdb);
 })
 
-test('returns Compuclub text line with INVALID source as an array of columns', () => {
-    expect(splitLineIntoColumns(textLineCompuclub, 'invalid')).toHaveLength(12)
-    expect(splitLineIntoColumns(textLineCompuclub, 'invalid')).toStrictEqual(resultCompuclub);
+test('returns space string as an array with one empty string', () => {
+    expect(splitLineIntoColumns(' ')).toHaveLength(0)
+    expect(splitLineIntoColumns(' ')).toStrictEqual([]);
 })
 
-test('returns KBDB text line with INVALID source as an array of columns', () => {
-    expect(splitLineIntoColumns(textLineKbdb, 'invalid')).toHaveLength(11)
-    expect(splitLineIntoColumns(textLineKbdb, 'invalid')).toStrictEqual(resultKbdb);
+test('returns empty string as an empty array', () => {
+    expect(splitLineIntoColumns('')).toHaveLength(0)
+    expect(splitLineIntoColumns('')).toStrictEqual([]);
+})
+
+test('returns empty array because no params were given', () => {
+    expect(splitLineIntoColumns()).toHaveLength(0)
+    expect(splitLineIntoColumns()).toStrictEqual([]);
 })

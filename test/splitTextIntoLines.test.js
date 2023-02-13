@@ -35,3 +35,19 @@ test('returns text with source KBDB as an array of text lines', () => {
     expect(splitTextIntoLines(textKbdb)).toHaveLength(10)
     expect(splitTextIntoLines(textKbdb)).toStrictEqual(result);
 })
+
+test('returns string with whitespace as an empty array', () => {
+    expect(splitTextIntoLines(' ')).toHaveLength(0)
+    expect(splitTextIntoLines(' ')).toStrictEqual([]);
+})
+
+test('returns empty string as an empty array', () => {
+    expect(splitTextIntoLines('')).toHaveLength(0)
+    expect(splitTextIntoLines('')).toStrictEqual([]);
+})
+
+
+test('returns empty array because no params were given', () => {
+    expect(splitTextIntoLines()).toHaveLength(0)
+    expect(splitTextIntoLines()).toStrictEqual([]);
+})
