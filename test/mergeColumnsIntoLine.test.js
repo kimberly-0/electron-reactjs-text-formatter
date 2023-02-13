@@ -41,3 +41,11 @@ test('returns empty string because no parts params were given', () => {
     const result = "";
     expect(mergeColumnsIntoLine(formattedLineParts, isNotLastLine)).toEqual(result);
 })
+
+test('returns empty string because empty parts array was given', () => {
+    expect(mergeColumnsIntoLine([])).toEqual('');
+})
+
+test('returns nothing because no params were given', () => {
+    expect(mergeColumnsIntoLine()).toEqual();
+})
