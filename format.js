@@ -1,6 +1,6 @@
 function formatText(text, columnsOptions, ftOptionsGemeenteWaar, ftOptionsSnelheidWaar, ftOptionsSnelheidNummers) {
 
-    if (text === undefined || text === null || text.length <= 0 || text === "") {
+    if (text === undefined || text === null || text.length <= 0 || isOnlyWhiteSpace(text)) {
         throw new Error('Geen tekst voorzien'); // No text provided
     }
 
@@ -51,6 +51,14 @@ function formatText(text, columnsOptions, ftOptionsGemeenteWaar, ftOptionsSnelhe
     return formattedTextMerged;
 }
 
+function isOnlyWhiteSpace(text) {
+    if (!text.replace(/\s/g, '').length) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function splitUpTextIntoLinesAndColumns(text) {
     const splittedText = [];
 
@@ -63,10 +71,13 @@ function splitUpTextIntoLinesAndColumns(text) {
 }
 
 function splitTextIntoLines(text) {
+    if (text === undefined || text === "" || isOnlyWhiteSpace(text)) return [];
     return text.split(/\r?\n/);
 }
 
 function splitLineIntoColumns(line) {
+    if (line === undefined || line === "" || isOnlyWhiteSpace(line)) return [];
+
     let columns = [];
 
     columns = line.trim().split(/[\t]/gm); // split on tab
@@ -83,12 +94,14 @@ function stylePlaats(columnValue) {
 
 function styleNaamOfGemeente(columnValue) {
      if (!containsLowercase(columnValue)) {
-        columnValue = capitalizeFirstLetterOfEachWord(columnValue.toLowerCase());
+        return capitalizeFirstLetterOfEachWord(columnValue);
     }
     return columnValue;
 }
 
 function styleSnelheid(columnValue, numOfDigitsAfterDecimalPoint) {
+    if (columnValue === undefined || columnValue === "" || isOnlyWhiteSpace(columnValue)) return "";
+
     const parts = columnValue.split(/[,.]/);
     if (numOfDigitsAfterDecimalPoint === 0) {
         return parts[0] + " m";
@@ -101,12 +114,16 @@ function styleSnelheid(columnValue, numOfDigitsAfterDecimalPoint) {
 }
 
 function containsLowercase(str) {
-  return /[a-z]/.test(str);
+    if (str === undefined) return false;
+    return /[a-z]/.test(str);
 }
 
 function capitalizeFirstLetterOfEachWord(line) {
+    if (line === undefined || line === "") return "";
 
-    const capitalizeAfterChars = [" ", "-", "(", "&", "/"];
+    line = line.toLowerCase();
+
+    const capitalizeAfterChars = [" ", "-", "&", "/", "("];
     for (let char = 0; char < capitalizeAfterChars.length; char++) {
 
         const parts = line.split(capitalizeAfterChars[char]);
@@ -147,14 +164,23 @@ function mergeColumnsIntoLine(formattedLineParts, isNotLastLine) {
         const lastChar = formattedLineParts[part].slice(-1);
         if (lastChar !== "." && lastChar !== "," && lastChar !== ";" && lastChar !== ":") {
 
-            if (part < formattedLineParts.length - 1) {
+            if (isOnlyWhiteSpace(formattedLineParts[part])) {
+                continue;
+            } else if (part < formattedLineParts.length - 1) {
                 formattedLineParts[part] = formattedLineParts[part] + ",";
             } else {
                 formattedLineParts[part] = formattedLineParts[part] + (isNotLastLine ? ";" : ".");
             }
         }
     }
-    return formattedLineParts.join(' ');
+
+    const formattedLine = formattedLineParts.join(' ');
+
+    if (isOnlyWhiteSpace(formattedLine)) {
+        return "";
+    } else {
+        return formattedLine;
+    }
 }
 
 module.exports = { formatText, splitUpTextIntoLinesAndColumns, splitTextIntoLines, splitLineIntoColumns, stylePlaats, styleNaamOfGemeente, styleSnelheid, containsLowercase, capitalizeFirstLetterOfEachWord, mergeColumnsIntoLine };
