@@ -159,6 +159,8 @@ function capitalizeFirstLetterOfEachWord(line) {
 // }
 
 function mergeColumnsIntoLine(formattedLineParts, isNotLastLine) {
+    if (formattedLineParts === undefined) return;
+    
     for (let part = 0; part < formattedLineParts.length; part++) {
 
         const lastChar = formattedLineParts[part].slice(-1);
