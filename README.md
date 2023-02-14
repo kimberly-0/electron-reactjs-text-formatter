@@ -2,7 +2,9 @@
 
 This desktop app is built with **Electron** and **React** and was created to solve a real-world problem. It can format large texts within seconds, which was previously achieved by manually typing every word. The app has enabled processes to be more efficient and less time-consuming.
 
-The methods responsible for the main functionality of the program (formatting the text) can be found in [`format.js`](https://github.com/kidijkmans/electron-reactjs-text-formatter/blob/master/format.js).
+The user can paste unformatted text into a text field. The program will recognise lines separated by a line break delimiter and columns split up by either multiple spaces or tabs. It will format the text based on the options the user selects. The result is displayed in a text field, so the user can modify it if necessary. A ‘copy to clipboard’ button was added to simplify the process of selecting and copying the formatted text for further processing.
+
+*The methods responsible for the main functionality of the program (formatting the text) can be found in [`format.js`](https://github.com/kidijkmans/electron-reactjs-text-formatter/blob/master/format.js).*
 
 
 ## Preview
