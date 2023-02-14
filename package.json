@@ -10,6 +10,7 @@
     "start-dev": "electron .",
     "start": "electron-forge start",
     "package": "electron-forge package",
+    "package-win": "electron-packager ./ --platform=win32 --arch=all --asar --overwrite --icon=./src/js/assets/logo/icon.ico --out=./out",
     "make": "electron-forge make"
   },
   "author": "Kimberly Dijkmans",
