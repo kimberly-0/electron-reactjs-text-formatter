@@ -1,8 +1,8 @@
 {
-  "name": "text-formatter",
+  "name": "tekst-opmaken",
   "productName": "Tekst opmaken",
   "version": "1.0.0",
-  "description": "Programma om tekst op te maken",
+  "description": "Programma om duiven uitslagen op te maken",
   "main": "main.js",
   "scripts": {
     "test": "jest",
