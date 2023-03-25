@@ -9,13 +9,14 @@ function formatText(text, columnsOptions, ftOptionsGemeenteWaar, ftOptionsSnelhe
     }
 
     const formattedTextLines = [];
-
     const splittedText = splitUpTextIntoLinesAndColumns(text);
 
+    /*
+    Filter out columns and style remaining
+    */
     for (let line = 0; line < splittedText.length; line++) {
         
         const formattedLineParts = [];
-
         for (let column = 0; column < splittedText[line].length; column++) {
             switch(columnsOptions[column]) {
                 case "plaats":
@@ -40,13 +41,39 @@ function formatText(text, columnsOptions, ftOptionsGemeenteWaar, ftOptionsSnelhe
             }
         }
 
+        // If there are any columns left over, add to formattedTextLines
         if (formattedLineParts.length > 0) {
-            formattedTextLines.push(mergeColumnsIntoLine(formattedLineParts, line < splittedText.length - 1));
+            formattedTextLines.push(formattedLineParts);
         }
     }
 
-    const formattedTextMerged = formattedTextLines.join(' '); // lines separated by a space
-    // const formattedTextEachOnNewLine = formattedTextLines.join('\n'); // lines separated by a new line char -> each on new line
+    /*
+    If 'snelheid' is only visible on first line, merge duplicate lines together
+    */
+   let newFormattedTextLines;
+    if (ftOptionsSnelheidWaar === "eerste") {
+        const uniqueLinesIncluded = [];
+        for (let line = 0; line < formattedTextLines.length; line++) {
+            mergeDuplicateLines(formattedTextLines[line], uniqueLinesIncluded);
+        }
+        newFormattedTextLines = uniqueLinesIncluded;
+    } else {
+        newFormattedTextLines = formattedTextLines;
+    }
+
+    /*
+    Combine columns of each line into one string
+    */
+   const formattedLinesMerged = [];
+    for (let line = 0; line < newFormattedTextLines.length; line++) {
+        formattedLinesMerged.push(mergeColumnsIntoLine(newFormattedTextLines[line], line < newFormattedTextLines.length - 1));
+    }
+
+    /*
+    Combine all lines into one paragraph/string
+    */
+    const formattedTextMerged = formattedLinesMerged.join(' '); // lines separated by a space
+    // const formattedTextEachOnNewLine = formattedLinesMerged.join('\n'); // lines separated by a new line char -> each on new line
 
     return formattedTextMerged;
 }
@@ -157,6 +184,40 @@ function capitalizeFirstLetterOfEachWord(line) {
 //     }
 //     return line;
 // }
+
+function mergeDuplicateLines(currentLineColumns, uniqueLinesIncluded) {
+    // Loop through unique lines already included in text
+    for (let line = 0; line < uniqueLinesIncluded.length; line++) {
+        // Loop through each column of current line to compare with lines already included
+        for (let column = 1; column < currentLineColumns.length; column++) {
+
+            // if a column does not match, break loop
+            if (currentLineColumns[column] !== uniqueLinesIncluded[line][column]) {
+                break;
+            }
+            // if at final column and if loop did not break -> line matches with already included line 
+            if (column === currentLineColumns.length - 1) {
+                // Voeg plaats toe aan eerste kolom
+                uniqueLinesIncluded[line][0] = combinePlaceColumns(uniqueLinesIncluded[line][0], currentLineColumns[0]);
+                return;
+            }
+        }
+    }
+    // add current line to unique lines
+    uniqueLinesIncluded.push(currentLineColumns); 
+}
+
+function combinePlaceColumns(originalPlaces, placesToAdd) {
+    // ensure merging of correct columns by checking if both contain numbers and do not contain any letters
+    const regexNumbers = /\d/;
+    const regexLetters = /[a-zA-Z]/;
+    if (regexNumbers.test(originalPlaces) && regexNumbers.test(placesToAdd) && !regexLetters.test(originalPlaces) && !regexLetters.test(placesToAdd)) {
+        const newPlaceColumn = originalPlaces.split(".")[0] + ", " + placesToAdd;
+        return newPlaceColumn;
+    } else {
+        throw new Error('Kan plaatsen niet samenvoegen');
+    }
+}
 
 function mergeColumnsIntoLine(formattedLineParts, isNotLastLine) {
     if (formattedLineParts === undefined) return;
