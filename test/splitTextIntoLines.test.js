@@ -4,16 +4,16 @@ const { textCompuclub, columnOptionsCompuclub, textKbdb, columnOptionsKbdb } = r
 
 test('returns text with source Compuclub as an array of text lines', () => {
     const result = [
-        "     1  Name Surname   City           1862   49/25   2-8507195    49   405,420  15.49.45  1399,206  1000,0  00:00:00 ",
-        "     2  Name Surname   City           1837   24/10   2-2204803    10   401,526  15.48.10  1393,380   998,7  00:01:13 ",
-        "     3  Name Surname   City           1862   26/22   2-5089762     1   409,383  15.54.30  1390,094   997,4  00:01:54 ",
-        "     4  Name Surname   City           1835   15/10   2-8486550V    2   419,345  16.01.57  1388,788   996,2  00:02:10 ",
-        "     5  Name Surname   City           1842   20/6    2-2205332    14   394,086  15.44.33  1384,945   994,9  00:02:59 ",
-        "     6  Name Surname   City           1862   49/     2-2207357     6      2     15.54.17  1377,651   993,6  00:04:32 ",
-        "     7  Name Surname   City           1859   60/23   2-7077251     2   400,523  15.52.09  1370,948   992,3  00:05:58 ",
-        "     8  Name Surname   City           1862   25/15   2-2207326    10   400,162  15.52.05  1370,026   991,1  00:06:10 ",
-        "     9  Name Surname   City           1862   48/23   2-2207217    20   400,471  15.52.42  1368,197   989,8  00:06:34 ",
-        "    10  Name Surname   City           1835   20/14   2-2204161     2   415,442  16.03.46  1367,633   988,5  00:06:41 "
+    " 1  John Doe       Springfield    1862   49/25   2-8507195    49   405,420  15.49.45  1399,206  1000,0  00:00:00 ", 
+    " 2  Emily Lee      Chicago  1837   24/10   2-2204803    10   401,526  15.48.10  1393,380   998,7  00:01:13 ", 
+    " 3  David Johnson  Los Angeles    1862   26/22   2-5089762     1   409,383  15.54.30  1390,094   997,4  00:01:54 ", 
+    " 4  Emily Lee      Chicago        1835   15/10   2-8486550V    2   419,345  16.01.57  1388,788   996,2  00:02:10 ", 
+    " 5  Michael Kim    San Francisco  1842   20/6    2-2205332    14   394,086  15.44.33  1384,945   994,9  00:02:59 ", 
+    " 6  Sarah Brown    Boston         1862   49/     2-2207357     6      2     15.54.17  1377,651   993,6  00:04:32 ", 
+    " 7  Kevin Davis    Seattle        1859   60/23   2-7077251     2   400,523  15.52.09  1370,948   992,3  00:05:58 ", 
+    " 8  Lisa Chen      Miami          1862   25/15   2-2207326    10   400,162  15.52.05  1370,026   991,1  00:06:10 ",
+    " 9  Adam Nguyen    Houston        1862   48/23   2-2207217    20   400,471  15.52.42  1368,197   989,8  00:06:34 ", 
+    "10  Sarah Brown    Boston        1835   20/14   2-2204161     2   415,442  16.03.46  1367,633   988,5  00:06:41"
     ];
     expect(splitTextIntoLines(textCompuclub)).toHaveLength(10)
     expect(splitTextIntoLines(textCompuclub)).toStrictEqual(result);
